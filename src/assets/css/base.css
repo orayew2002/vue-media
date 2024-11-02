@@ -1,0 +1,43 @@
+/* color palette from <https://github.com/vuejs/theme> */
+@font-face {
+  font-family: 'Poppins';
+  src: url('@/assets/fonts/Poppins/Poppins-Regular.ttf'),
+    url('@/assets/fonts/Poppins/Poppins-Medium.ttf'),
+    url('@/assets/fonts/Poppins/Poppins-SemiBold.ttf'),
+    url('@/assets/fonts/Poppins/Poppins-Bold.ttf');
+}
+:root {
+  --slate-100: rgb(241 245 249);
+  --slate-200: rgb(226 232 240);
+  --slate-300: rgb(203 213 225);
+  --slate-400: rgb(148 163 184);
+  --slate-500: rgb(100 116 139);
+  --slate-600: rgb(71 85 105);
+  --slate-700: rgb(51 65 85);
+  --slate-800: rrgb(30 41 59);
+  --slate-900: rgb(15 23 42);
+  --slate-950: rgb(2 6 23);
+}
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: normal;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background-color: var(--slate-950);
+}
+
+html {
+  margin: 0;
+  padding: 0;
+}
+
+.router-link-active {
+  text-decoration: underline !important;
+  color: white !important;
+}
