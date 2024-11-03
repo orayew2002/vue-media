@@ -1,20 +1,29 @@
 <script setup lang="ts">
-import type { TMovie } from '@/types/movie'
+import type { TMovieHomePage } from '@/types/movie'
 import { RouterLink } from 'vue-router'
 import MovieItem from '@/components/movie/MovieItem.vue'
-import { defineProps } from 'vue'
+import { useI18n } from 'vue-i18n'
+import type { TLang } from '@/types/common'
 const props = defineProps<{
-  movies: TMovie[]
+  movies: TMovieHomePage
 }>()
+
+const { locale } = useI18n()
 </script>
 
 <template>
   <div class="movie_list_container">
     <div class="movie_list_header">
-      <RouterLink to="/">Movie List ></RouterLink>
+      <RouterLink :to="'/movies/category/' + movies.id"
+        >{{ movies.title[locale as keyof TLang] }} ></RouterLink
+      >
     </div>
     <div class="movie_list">
-      <MovieItem v-for="movie in movies" :key="movie.id" :movie="movie" />
+      <MovieItem
+        v-for="movie in movies.movies"
+        :key="movie.id"
+        :movie="movie"
+      />
     </div>
   </div>
 </template>

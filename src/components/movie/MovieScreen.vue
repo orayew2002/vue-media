@@ -2,26 +2,37 @@
 import type { TMovie } from '@/types/movie'
 import { useI18n } from 'vue-i18n'
 import type { TLang } from '@/types/common'
+import { ref } from 'vue'
 const env = import.meta.env.VITE_API_URL
+const loadingImage = ref(true)
 const props = defineProps<{
   movie: TMovie
 }>()
 
 const { locale } = useI18n()
+
+const truncate = (desc: string) => {
+  const max = 200
+  return desc.length > max ? desc.slice(0, max) + '...' : desc
+}
+const onImageLoad = () => {
+  loadingImage.value = false
+}
 </script>
+
 <template>
-  <div class="movie_screen">
+  <div v-if="movie" class="movie_screen">
+    <!-- Skeleton -->
+    <div v-if="loadingImage" class="skeleton"></div>
     <div class="movie_screen__info">
       <span>{{ movie.title[locale as keyof TLang] }}</span>
       <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit officia
-        ipsa natus! Earum, consectetur molestias magni minima cum impedit
-        aspernatur iusto quas fuga quidem ipsum explicabo voluptatibus officia a
-        reprehenderit.
+        {{ truncate(movie.description[locale as keyof TLang]) }}
       </p>
       <button>▶︎ Play</button>
     </div>
     <img
+      @load="onImageLoad"
       :src="movie.image ? env + movie.image : '/logo.svg'"
       alt="movie image"
     />
@@ -111,7 +122,7 @@ img {
     height: 400px;
   }
   .movie_screen__info {
-    top: 50%;
+    top: 30%;
   }
   .movie_screen__info > p {
     width: 70vw;
@@ -128,7 +139,7 @@ img {
 
 @media (min-width: 768px) and (max-width: 1440px) {
   .movie_screen {
-    height: 400px;
+    height: 500px;
   }
   .movie_screen__info {
     top: 40%;

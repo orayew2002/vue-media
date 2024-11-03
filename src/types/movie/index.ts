@@ -13,3 +13,11 @@ export type TMovieCategory = {
   id: number
   title: TLang
 }
+
+export type TMovieHomePage = {
+  id: number
+  title: TLang
+  movies: TMovie[]
+}
+
+export type TMoviesHomePage = TMovieHomePage[]

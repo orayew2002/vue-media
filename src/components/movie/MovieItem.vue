@@ -3,13 +3,21 @@ import type { TMovie } from '@/types/movie'
 import { useI18n } from 'vue-i18n'
 import type { TLang } from '@/types/common'
 import formatDuration from '@/utils/formatDuration'
+import { ref } from 'vue'
 const env = import.meta.env.VITE_API_URL
+const loadingImage = ref(true)
+
 const props = defineProps<{
   movie: TMovie
 }>()
 
 const { locale } = useI18n()
+
+const onImageLoad = () => {
+  loadingImage.value = false
+}
 </script>
+
 <template>
   <div class="movie_item">
     <div class="movie_item_info">
@@ -17,9 +25,12 @@ const { locale } = useI18n()
     </div>
     <span class="movie_duration">{{ formatDuration(movie.duration) }}</span>
     <img
-      :src="movie.image ? env + movie.image : '/logo.svg'"
+      @load="onImageLoad"
+      :src="movie.image ? env + movie.image : '/placeholder.png'"
       alt="movie image"
     />
+    <!-- Skeleton  -->
+    <div v-if="loadingImage" class="skeleton"></div>
   </div>
 </template>
 <style scoped>
@@ -29,9 +40,10 @@ const { locale } = useI18n()
   overflow-x: auto;
   scroll-behavior: smooth;
   width: 300px;
-  cursor: pointer;
   transform: scale(1);
   transition: transform 0.3s ease-in-out;
+  height: 100%;
+  overflow: hidden;
 }
 
 .movie_item::before {
@@ -58,6 +70,7 @@ const { locale } = useI18n()
 }
 
 .movie_item_info {
+  z-index: 2;
   position: absolute;
   bottom: 10%;
   margin-left: 5px;
@@ -93,6 +106,8 @@ const { locale } = useI18n()
   border-radius: 4px;
   object-fit: cover;
 }
+
+/* Shimmer Effect */
 
 @media screen and (max-width: 768px) {
   .movie_item {

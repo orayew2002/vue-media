@@ -7,8 +7,10 @@
           <li v-for="link in links" :key="link.name">
             <RouterLink :to="link.path">{{ $t(link.name) }}</RouterLink>
             <div class="dropdown_container" v-if="link.name === 'movies'">
-              <li v-for="cat in ['akl', 'askdjak', 'daskdja']">
-                <RouterLink :key="cat" :to="'/' + cat">{{ cat }}</RouterLink>
+              <li v-for="cat in categories">
+                <RouterLink :key="cat.id" :to="'/' + cat">{{
+                  cat.title[locale as keyof TLang]
+                }}</RouterLink>
               </li>
             </div>
           </li>
@@ -34,66 +36,6 @@
     </ul>
   </div>
 </template>
-
-<script setup lang="ts">
-import { getMovieCategories } from '@/services/movies'
-import type { TLang } from '@/types/common'
-import type { TMovieCategory } from '@/types/movie'
-import { onMounted, onUnmounted, ref, watchEffect } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { RouterLink, useRoute } from 'vue-router'
-const categories = ref<TMovieCategory[]>([])
-const menuIsOpened = ref(false)
-const menu = ref<HTMLDivElement>()
-const { locale } = useI18n()
-
-const links = [
-  {
-    name: 'movies',
-    path: '/',
-  },
-  {
-    name: 'music',
-    path: '/music',
-  },
-  {
-    name: 'books',
-    path: '/books',
-  },
-]
-
-const handleMouseOver = (name: string) => {
-  if (name === 'movies') {
-  }
-}
-
-const openMenu = () => {
-  menuIsOpened.value = !menuIsOpened.value
-}
-
-const handleClickOutside = (event: any) => {
-  if (menuIsOpened.value && menu.value && !menu.value.contains(event.target)) {
-    menuIsOpened.value = false
-  }
-}
-
-watchEffect(async () => {
-  try {
-    const res = await getMovieCategories()
-    categories.value = res.data
-  } catch (err) {
-    console.log(err)
-  }
-})
-
-onMounted(() => {
-  document.addEventListener('click', handleClickOutside)
-})
-
-onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside)
-})
-</script>
 
 <style scoped>
 .header {
@@ -155,17 +97,19 @@ li:hover .dropdown_container {
 }
 
 .dropdown_container {
-  background-color: rgb(148 163 184);
+  background-color: var(--slate-600);
   display: none;
   position: absolute;
   top: 100%;
   left: 0;
+  width: 200px;
   transition: 0.7s ease-in-out;
   border-radius: 5px;
 }
 
 .dropdown_container > li {
   padding: 4px;
+  width: 100%;
 }
 
 .dropdown_container > li > a {
@@ -260,7 +204,7 @@ li:hover .dropdown_container {
   }
   .mobile_links {
     display: block;
-    position: absolute;
+    position: fixed;
     padding: 1rem 0.6rem;
     margin: 0;
     background: linear-gradient(
@@ -294,3 +238,58 @@ li:hover .dropdown_container {
   }
 }
 </style>
+
+<script setup lang="ts">
+import { getMovieCategories } from '@/services/movies'
+import type { TLang } from '@/types/common'
+import type { TMovieCategory } from '@/types/movie'
+import { onMounted, onUnmounted, ref, watchEffect } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { RouterLink, useRoute } from 'vue-router'
+const categories = ref<TMovieCategory[]>([])
+const menuIsOpened = ref(false)
+const menu = ref<HTMLDivElement>()
+const { locale } = useI18n()
+
+const links = [
+  {
+    name: 'movies',
+    path: '/',
+  },
+  {
+    name: 'music',
+    path: '/music',
+  },
+  {
+    name: 'books',
+    path: '/books',
+  },
+]
+
+const openMenu = () => {
+  menuIsOpened.value = !menuIsOpened.value
+}
+
+const handleClickOutside = (event: any) => {
+  if (menuIsOpened.value && menu.value && !menu.value.contains(event.target)) {
+    menuIsOpened.value = false
+  }
+}
+
+watchEffect(async () => {
+  try {
+    const res = await getMovieCategories()
+    categories.value = res.data
+  } catch (err) {
+    console.log(err)
+  }
+})
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
+</script>
