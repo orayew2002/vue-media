@@ -28,6 +28,18 @@ watchEffect(() => fetchData())
   <AppLoading v-if="loading" />
   <div v-else>
     <MovieScreen :movie="moviesWithCategories[0]?.movies[0]" />
-    <MovieList v-for="movies in moviesWithCategories" :movies="movies" />
+    <div class="movie-list-home">
+      <MovieList
+        v-for="movies in moviesWithCategories"
+        :movies="movies"
+        class="movie-list-home"
+      />
+    </div>
   </div>
 </template>
+
+<style scoped>
+.movie-list-home {
+  padding-inline: 2rem;
+}
+</style>

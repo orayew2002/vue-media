@@ -38,9 +38,13 @@ const { locale } = useI18n()
   width: 100%;
   height: 100%;
   display: flex;
-  gap: 1rem;
+  gap: 2rem;
   padding: 10px;
   overflow-x: scroll;
+  --webkit-overflow-scroll: none;
+}
+.movie_list::-webkit-scrollbar {
+  display: none;
 }
 
 .movie_list_header > a {

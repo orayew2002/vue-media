@@ -19,18 +19,18 @@ const onImageLoad = () => {
 </script>
 
 <template>
-  <div class="movie_item">
-    <div class="movie_item_info">
-      <span class="movie_title">{{ movie.title[locale as keyof TLang] }}</span>
+  <div>
+    <div class="movie_item">
+      <span class="movie_duration">{{ formatDuration(movie.duration) }}</span>
+      <img
+        @load="onImageLoad"
+        :src="movie.image ? env + movie.image : '/placeholder.png'"
+        alt="movie image"
+      />
+      <!-- Skeleton  -->
+      <div v-if="loadingImage" class="skeleton"></div>
     </div>
-    <span class="movie_duration">{{ formatDuration(movie.duration) }}</span>
-    <img
-      @load="onImageLoad"
-      :src="movie.image ? env + movie.image : '/placeholder.png'"
-      alt="movie image"
-    />
-    <!-- Skeleton  -->
-    <div v-if="loadingImage" class="skeleton"></div>
+    <span class="movie_title">{{ movie.title[locale as keyof TLang] }}</span>
   </div>
 </template>
 <style scoped>
@@ -46,42 +46,18 @@ const onImageLoad = () => {
   overflow: hidden;
 }
 
-.movie_item::before {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  content: '';
-  background: 
-    /* Top shading */
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 0 0,
-    /* Bottom shading */
-      linear-gradient(to top, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 0 100%,
-    /* Left shading */
-      linear-gradient(to right, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 0 0,
-    /* Right shading */
-      linear-gradient(to left, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 100% 0;
-}
-
 .movie_item:hover {
   transform: scale(1.05);
   /* Bottom shading */
 }
 
-.movie_item_info {
-  z-index: 2;
-  position: absolute;
-  bottom: 10%;
-  margin-left: 5px;
-  color: white;
-  left: 0;
-}
-
-.movie_item_info > .movie_title {
+.movie_title {
   font-weight: 800;
   font-size: medium;
   text-transform: uppercase;
+  color: var(--movie-title);
+  display: block;
+  margin-top: 0.5rem;
 }
 
 .movie_item_info > p {
@@ -91,8 +67,8 @@ const onImageLoad = () => {
 
 .movie_duration {
   position: absolute;
-  top: 2%;
-  right: 3%;
+  top: 0;
+  right: 0;
   background: rgba(0, 0, 0, 0.4);
   padding: 2px 5px;
   border-radius: 5px;
@@ -118,7 +94,7 @@ const onImageLoad = () => {
 
 @media (min-width: 768px) and (max-width: 1440px) {
   .movie_item {
-    width: 320px;
+    width: 160px;
     height: 220px;
   }
 }
