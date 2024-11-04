@@ -20,4 +20,9 @@ export type TMovieHomePage = {
   movies: TMovie[]
 }
 
+export type TMoviesBySubCatId = {
+  movies: TMovie[]
+  total: number
+}
+
 export type TMoviesHomePage = TMovieHomePage[]

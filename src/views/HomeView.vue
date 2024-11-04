@@ -1,36 +1,24 @@
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
-import type { TMovie, TMoviesHomePage } from '@/types/movie'
-import { getHomePageMovies, getMovies } from '@/services/movies'
+import { onMounted } from 'vue'
 import MovieList from '@/components/movie/MovieList.vue'
 import MovieScreen from '@/components/movie/MovieScreen.vue'
 import AppLoading from '@/components/app/AppLoading.vue'
-const loading = ref(false)
-const moviesWithCategories = ref<TMoviesHomePage>([])
-const error = ref(null)
-async function fetchData() {
-  loading.value = true
+import { useMovieStore } from '@/store/movie'
 
-  try {
-    const data = await getHomePageMovies()
-    moviesWithCategories.value = data.data
-  } catch (err: any) {
-    error.value = err.toString()
-  } finally {
-    loading.value = false
-  }
-}
+const movieStore = useMovieStore()
 
-watchEffect(() => fetchData())
+onMounted(() => {
+  movieStore.fetchMovies()
+})
 </script>
 
 <template>
-  <AppLoading v-if="loading" />
+  <AppLoading v-if="movieStore.loading" />
   <div v-else>
-    <MovieScreen :movie="moviesWithCategories[0]?.movies[0]" />
+    <MovieScreen :movie="movieStore.moviesWithCategories[0]?.movies[0]" />
     <div class="movie-list-home">
       <MovieList
-        v-for="movies in moviesWithCategories"
+        v-for="movies in movieStore.moviesWithCategories"
         :movies="movies"
         class="movie-list-home"
       />
@@ -38,8 +26,4 @@ watchEffect(() => fetchData())
   </div>
 </template>
 
-<style scoped>
-.movie-list-home {
-  padding-inline: 2rem;
-}
-</style>
+<style scoped></style>

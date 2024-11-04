@@ -19,7 +19,7 @@ const onImageLoad = () => {
 </script>
 
 <template>
-  <div>
+  <RouterLink :to="'/movies/' + movie.id" class="movie_item_link">
     <div class="movie_item">
       <span class="movie_duration">{{ formatDuration(movie.duration) }}</span>
       <img
@@ -30,14 +30,21 @@ const onImageLoad = () => {
       <!-- Skeleton  -->
       <div v-if="loadingImage" class="skeleton"></div>
     </div>
-    <span class="movie_title">{{ movie.title[locale as keyof TLang] }}</span>
-  </div>
+    <span class="movie_title"
+      >{{ movie.title[locale as keyof TLang] }} {{ movie.id }}</span
+    >
+  </RouterLink>
 </template>
 <style scoped>
+.movie_item_link {
+  text-decoration: none;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
 .movie_item {
   position: relative;
   flex-shrink: 0;
-  overflow-x: auto;
   scroll-behavior: smooth;
   width: 300px;
   transform: scale(1);
@@ -52,12 +59,10 @@ const onImageLoad = () => {
 }
 
 .movie_title {
-  font-weight: 800;
   font-size: medium;
-  text-transform: uppercase;
+  text-transform: capitalize;
   color: var(--movie-title);
   display: block;
-  margin-top: 0.5rem;
 }
 
 .movie_item_info > p {
@@ -88,7 +93,10 @@ const onImageLoad = () => {
 @media screen and (max-width: 768px) {
   .movie_item {
     width: 120px;
-    height: 100%;
+    height: 90%;
+  }
+  .movie_title {
+    font-size: small;
   }
 }
 

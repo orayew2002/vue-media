@@ -36,7 +36,7 @@ const { locale } = useI18n()
 
 .movie_list {
   width: 100%;
-  height: 100%;
+  max-height: 100%;
   display: flex;
   gap: 2rem;
   padding: 10px;

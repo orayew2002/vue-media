@@ -125,14 +125,31 @@
         </button>
       </div>
     </div>
+    <div class="video_status_container">
+      <div v-if="isVideoLoading">
+        <img src="/bars-scale-middle.svg" alt="" />
+      </div>
+      <div v-else class="pause_play_icons">
+        <div
+          class="pause_icon"
+          @click="onPauseScreenIconClick"
+          v-if="!isPaused"
+        >
+          <span />
+          <span />
+        </div>
+
+        <span @click="onPlayScreenIconClick" v-else class="play_icon">▶︎</span>
+      </div>
+    </div>
   </div>
 </template>
-
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref, watchEffect } from 'vue'
 import dashjs from 'dashjs'
 import formatDuration from '@/utils/formatDuration'
 const isPaused = ref(true)
+const isVideoLoading = ref(true)
 const video_ref = ref<HTMLVideoElement | null>(null)
 const video_container_ref = ref<HTMLDivElement | null>(null)
 const timeline_container_ref = ref<HTMLDivElement | null>(null)
@@ -147,6 +164,11 @@ const totalVideoDuration = ref('')
 const currentTimeOfVideo = ref('0:00')
 const speed = ref('1x')
 const isScrubbing = ref(false)
+const props = defineProps({
+  id: {
+    type: String,
+  },
+})
 
 let wasPaused: boolean
 const handlePlayPause = (val: boolean) => {
@@ -348,7 +370,17 @@ const skipBackwardHandler = () => {
     video_ref.value.currentTime -= 5
   }
 }
+
+const onPauseScreenIconClick = () => {
+  video_ref.value?.pause()
+  isPaused.value = true
+}
+const onPlayScreenIconClick = () => {
+  video_ref.value?.play()
+  isPaused.value = false
+}
 let player: any = null
+
 onMounted(() => {
   document.addEventListener('keydown', handleKeydown)
   document.addEventListener('fullscreenchange', fullScreenChangeHandler)
@@ -360,20 +392,28 @@ onMounted(() => {
   video_ref.value?.addEventListener('leavepictureinpicture', () =>
     toggleMiniPlayerMode(false),
   )
+  if (props.id) {
+    const URL = `${import.meta.env.VITE_API_URL}/movies/video/${props.id}`
+    player = dashjs.MediaPlayer().create()
+    player.initialize(video_ref.value as HTMLMediaElement, URL, true)
 
-  player = dashjs.MediaPlayer().create()
-  player.initialize(
-    video_ref.value as HTMLMediaElement,
-    'http://172.31.13.14:8080/movies/video/1',
-    true,
-  )
+    // Listen for the playback metadata event to get the duration
+    player.on(dashjs.MediaPlayer.events.PLAYBACK_METADATA_LOADED, () => {
+      totalVideoDuration.value = formatDuration(player.duration())
+    })
+  }
 
-  // Listen for the playback metadata event to get the duration
-  player.on(dashjs.MediaPlayer.events.PLAYBACK_METADATA_LOADED, () => {
-    totalVideoDuration.value = formatDuration(player.duration())
+  player.on(dashjs.MediaPlayer.events.PLAYBACK_LOADED_DATA, () => {
+    isVideoLoading.value = false
   })
-  // totalVideoDuration.value = formatDuration(video_ref.value?.duration)
-  // video_container_ref.value?.classList.add('paused');
+
+  player.on(dashjs.MediaPlayer.events.PLAYBACK_SEEKING, () => {
+    isVideoLoading.value = true
+  })
+
+  player.on(dashjs.MediaPlayer.events.PLAYBACK_SEEKED, () => {
+    isVideoLoading.value = false
+  })
 })
 
 onUnmounted(() => {
@@ -453,6 +493,10 @@ video {
 .video-container:hover .video-controls-container,
 .video-container:focus-within .video-controls-container,
 .video-container.paused .video-controls-container {
+  opacity: 1;
+}
+
+.video-container:hover .pause_play_icons {
   opacity: 1;
 }
 
@@ -629,5 +673,46 @@ video {
 .video-container.scrubbing .timeline,
 .timeline-container:hover .timeline {
   height: 100%;
+}
+
+.video_status_container {
+  position: absolute;
+  z-index: 100;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.pause_play_icons {
+  opacity: 0;
+}
+.pause_play_icons > .pause_icon {
+  display: flex;
+  gap: 1.5rem;
+}
+.pause_play_icons > .pause_icon > span {
+  display: block;
+  width: 20px;
+  height: 50px;
+  background-color: white;
+}
+.pause_play_icons > span {
+  font-size: 4rem;
+  display: block;
+  color: white;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+  .pause_play_icons > span {
+    font-size: 3rem;
+  }
+  .pause_play_icons > .pause_icon {
+    gap: 1rem;
+  }
+  .pause_play_icons > .pause_icon > span {
+    width: 10px;
+    height: 30px;
+  }
 }
 </style>
