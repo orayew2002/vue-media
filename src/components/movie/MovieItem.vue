@@ -102,8 +102,8 @@ const onImageLoad = () => {
 
 @media (min-width: 768px) and (max-width: 1440px) {
   .movie_item {
-    width: 160px;
-    height: 220px;
+    width: 260px;
+    height: 300px;
   }
 }
 </style>

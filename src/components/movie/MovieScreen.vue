@@ -29,7 +29,16 @@ const onImageLoad = () => {
       <p>
         {{ truncate(movie.description[locale as keyof TLang]) }}
       </p>
-      <button>▶︎ Play</button>
+      <button
+        @click="
+          e => {
+            e.preventDefault()
+            $router.push({ name: 'movie', params: { id: movie.id } })
+          }
+        "
+      >
+        ▶︎ Play
+      </button>
     </div>
     <img
       @load="onImageLoad"

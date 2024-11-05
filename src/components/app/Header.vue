@@ -1,14 +1,18 @@
 <template>
   <div class="header">
     <div class="header_container">
-      <img src="@/assets/img/logo.svg" alt="logo" />
+      <img
+        src="@/assets/img/logo.svg"
+        alt="logo"
+        @click="() => $router.push('/')"
+      />
       <div class="links">
         <ul>
           <li v-for="link in links" :key="link.name">
             <RouterLink :to="link.path">{{ $t(link.name) }}</RouterLink>
             <div class="dropdown_container" v-if="link.name === 'movies'">
               <li v-for="cat in categories">
-                <RouterLink :key="cat.id" :to="'/' + cat">{{
+                <RouterLink :key="cat.id" :to="'/movies/category/' + cat.id">{{
                   cat.title[locale as keyof TLang]
                 }}</RouterLink>
               </li>
@@ -86,6 +90,7 @@
 
 img {
   width: 10rem;
+  cursor: pointer;
 }
 
 ul {
