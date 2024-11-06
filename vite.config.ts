@@ -9,6 +9,8 @@ export default defineConfig({
   plugins: [vue(), vueJsx()],
   server: {
     cors: false,
+    port: 3000,
+    host: true,
   },
   resolve: {
     alias: {

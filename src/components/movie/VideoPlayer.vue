@@ -30,6 +30,8 @@
         class="timeline-container"
         @mousemove="handleTimeLineUpdate"
         @mousedown="toggleScrubbing"
+        @touchstart="handleTimeLineUpdate"
+        @touchmove="toggleScrubbing"
       >
         <div class="timeline">
           <div ref="buffered_ref" class="buffered"></div>
@@ -148,6 +150,9 @@
 import { onMounted, onUnmounted, ref, watchEffect } from 'vue'
 import dashjs from 'dashjs'
 import formatDuration from '@/utils/formatDuration'
+import { useIsMobile } from '@/composables/useIsMobile'
+
+const { isMobile } = useIsMobile()
 const isPaused = ref(true)
 const isVideoLoading = ref(true)
 const video_ref = ref<HTMLVideoElement | null>(null)
@@ -176,7 +181,7 @@ const handlePlayPause = (val: boolean) => {
 }
 
 const togglePlay = () => {
-  if (video_ref.value) {
+  if (video_ref.value && !isMobile.value) {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     video_ref.value.paused ? video_ref.value.play() : video_ref.value.pause()
   }
@@ -282,7 +287,9 @@ const skip = (duration: number) => {
 }
 
 const timeUpdateHandler = () => {
-  currentTimeOfVideo.value = formatDuration(video_ref.value?.currentTime)
+  currentTimeOfVideo.value = formatDuration(
+    parseInt(video_ref.value?.currentTime.toFixed(2) as string, 10),
+  )
   if (video_ref.value) {
     const percent = video_ref.value?.currentTime / video_ref.value?.duration
     timeline_container_ref.value?.style.setProperty(
@@ -314,31 +321,51 @@ const playbackHandler = () => {
 
 // Timeline
 
-const handleTimeLineUpdate = (e: MouseEvent) => {
+const handleTimeLineUpdate = (e: any) => {
   const rect = timeline_container_ref.value?.getBoundingClientRect()
+  if (!rect) return
+
+  // Get x position based on event type (mouse or touch)
+  const clientX = e instanceof MouseEvent ? e.clientX : e.touches?.[0]?.clientX
+  if (clientX === undefined) return
+
+  // Calculate percent based on x position
   const percent =
-    Math.min(Math.max(0, e.x - (rect as DOMRect).x), (rect as DOMRect).width) /
-    (rect as DOMRect).width
+    Math.min(Math.max(0, clientX - rect.x), rect.width) / rect.width
 
   timeline_container_ref.value?.style.setProperty(
     '--preview-position',
     percent + '',
   )
-  if (isScrubbing.value) {
-    e.preventDefault()
+
+  if (isMobile.value) {
     timeline_container_ref.value?.style.setProperty(
       '--progress-position',
       percent + '',
     )
+  } else {
+    if (isScrubbing.value) {
+      e.preventDefault()
+      timeline_container_ref.value?.style.setProperty(
+        '--progress-position',
+        percent + '',
+      )
+    }
   }
 }
 
-const toggleScrubbing = (e: MouseEvent) => {
+const toggleScrubbing = (e: MouseEvent | TouchEvent) => {
   const rect = timeline_container_ref.value?.getBoundingClientRect()
+  if (!rect) return
+  // Get x position based on event type (mouse or touch)
+  const clientX = e instanceof MouseEvent ? e.clientX : e.touches?.[0]?.clientX
+  if (clientX === undefined) return // Exit if clientX is undefined
+
+  // Calculate percent based on the x position
   const percent =
-    Math.min(Math.max(0, e.x - (rect as DOMRect).x), (rect as DOMRect).width) /
-    (rect as DOMRect).width
-  isScrubbing.value = (e.buttons & 1) === 1
+    Math.min(Math.max(0, clientX - rect.x), rect.width) / rect.width
+
+  isScrubbing.value = (e instanceof MouseEvent && e.buttons & 1) === 1
   if (isScrubbing.value) {
     wasPaused = video_ref.value?.paused as boolean
     video_ref.value?.pause()
@@ -351,11 +378,12 @@ const toggleScrubbing = (e: MouseEvent) => {
   handleTimeLineUpdate(e)
 }
 
-const documentMouseupHandler = (e: MouseEvent) => {
+const documentMouseupHandler = (e: any) => {
+  console.log('touch end')
   if (isScrubbing.value) toggleScrubbing(e)
 }
 
-const documentMouseMoveHandler = (e: MouseEvent) => {
+const documentMouseMoveHandler = (e: any) => {
   if (isScrubbing.value) handleTimeLineUpdate(e)
 }
 
@@ -386,6 +414,9 @@ onMounted(() => {
   document.addEventListener('fullscreenchange', fullScreenChangeHandler)
   document.addEventListener('mouseup', documentMouseupHandler)
   document.addEventListener('mousemove', documentMouseMoveHandler)
+  // for mobile
+  document.addEventListener('touchstart', documentMouseupHandler)
+  document.addEventListener('touchmove', documentMouseMoveHandler)
   video_ref.value?.addEventListener('enterpictureinpicture', () =>
     toggleMiniPlayerMode(true),
   )
@@ -414,10 +445,23 @@ onMounted(() => {
   player.on(dashjs.MediaPlayer.events.PLAYBACK_SEEKED, () => {
     isVideoLoading.value = false
   })
+
+  player.on(dashjs.MediaPlayer.events.PLAYBACK_STALLED, () => {
+    isVideoLoading.value = true
+  })
+  player.on(dashjs.MediaPlayer.events.PLAYBACK_WAITING, () => {
+    isVideoLoading.value = true
+  })
 })
+
+console.log(isMobile.value, 'mobile value')
 
 onUnmounted(() => {
   document.removeEventListener('keydown', handleKeydown)
+  document.removeEventListener('touchstart', documentMouseupHandler)
+  document.removeEventListener('touchmove', documentMouseMoveHandler)
+  document.removeEventListener('mouseup', documentMouseupHandler)
+  document.removeEventListener('mousemove', documentMouseMoveHandler)
 })
 </script>
 
@@ -457,6 +501,7 @@ video {
   bottom: 0;
   width: 33%;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .skipForward {
@@ -466,6 +511,7 @@ video {
   bottom: 0;
   width: 33%;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .video-controls-container {
@@ -494,6 +540,11 @@ video {
 .video-container:focus-within .video-controls-container,
 .video-container.paused .video-controls-container {
   opacity: 1;
+}
+
+.pause_play_icons {
+  padding: 0;
+  margin: 0;
 }
 
 .video-container:hover .pause_play_icons {
@@ -685,7 +736,9 @@ video {
 
 .pause_play_icons {
   opacity: 0;
+  transition: all 0.3s ease-in-out;
 }
+
 .pause_play_icons > .pause_icon {
   display: flex;
   gap: 1.5rem;
@@ -696,6 +749,7 @@ video {
   height: 50px;
   background-color: white;
 }
+
 .pause_play_icons > span {
   font-size: 4rem;
   display: block;
@@ -707,6 +761,7 @@ video {
   .pause_play_icons > span {
     font-size: 3rem;
   }
+
   .pause_play_icons > .pause_icon {
     gap: 1rem;
   }

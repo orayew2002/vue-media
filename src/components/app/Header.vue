@@ -1,11 +1,13 @@
 <template>
   <div class="header">
     <div class="header_container">
-      <img
-        src="@/assets/img/logo.svg"
-        alt="logo"
-        @click="() => $router.push('/')"
-      />
+      <div class="header_logo_search">
+        <img
+          src="@/assets/img/logo.svg"
+          alt="logo"
+          @click="() => $router.push('/')"
+        />
+      </div>
       <div class="links">
         <ul>
           <li v-for="link in links" :key="link.name">
@@ -20,17 +22,7 @@
           </li>
         </ul>
       </div>
-      <div class="locales">
-        <span
-          :class="{
-            underline_lang: $i18n.locale === locale.name,
-          }"
-          v-for="locale in locales"
-          :key="locale.name"
-          @click="changeLocale(locale.name)"
-          >{{ locale.label }}</span
-        >
-      </div>
+      <Locales />
     </div>
   </div>
   <div ref="menu" class="menu" @click="openMenu">
@@ -71,8 +63,15 @@
   z-index: 5;
 }
 
+.header_logo_search {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
 .links {
   margin-inline: 2rem;
+  position: relative;
 }
 
 .links > ul {
@@ -88,7 +87,7 @@
   display: none;
 }
 
-img {
+.header_logo_search > img {
   width: 10rem;
   cursor: pointer;
 }
@@ -177,22 +176,6 @@ li:hover .dropdown_container {
   display: none;
 }
 
-.locales {
-  display: flex;
-  gap: 10px;
-  padding-right: 1rem;
-}
-
-.locales > span {
-  display: block;
-  font-size: 2rem;
-  cursor: pointer;
-}
-
-.underline_lang {
-  border-bottom: 1px solid white;
-}
-
 @keyframes slideInFromBottom {
   from {
     transform: translateY(100%);
@@ -273,27 +256,16 @@ li:hover .dropdown_container {
 
 <script setup lang="ts">
 import { getMovieCategories } from '@/services/movies'
+import Locales from '@/components/app/Locales.vue'
 import type { TLang } from '@/types/common'
 import type { TMovieCategory } from '@/types/movie'
 import { onMounted, onUnmounted, ref, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n'
-import i18n from '@/plugins/i18n'
-import { RouterLink, useRoute } from 'vue-router'
+import { RouterLink } from 'vue-router'
 const categories = ref<TMovieCategory[]>([])
 const menuIsOpened = ref(false)
 const menu = ref<HTMLDivElement>()
 const { locale } = useI18n()
-const locales = [
-  {
-    name: 'tk',
-    label: '🇹🇲',
-  },
-  {
-    name: 'ru',
-    label: '🇷🇺',
-  },
-]
-
 const links = [
   {
     name: 'movies',
@@ -317,10 +289,6 @@ const handleClickOutside = (event: any) => {
   if (menuIsOpened.value && menu.value && !menu.value.contains(event.target)) {
     menuIsOpened.value = false
   }
-}
-
-const changeLocale = (lang: string) => {
-  i18n.global.locale = lang as keyof TLang
 }
 
 watchEffect(async () => {

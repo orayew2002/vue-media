@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import MoviesBySubCatId from '@/components/movie/MoviesBySubCatId.vue'
 import VideoPlayer from '@/components/movie/VideoPlayer.vue'
+import ru from '@/lang/ru'
 import { getMovieById } from '@/services/movies'
 import type { TLang } from '@/types/common'
 import type { TMovie } from '@/types/movie'
@@ -14,6 +16,14 @@ async function fetchMovieById() {
   } catch (err) {
     console.log(err)
   }
+}
+
+const data = {
+  id: 1,
+  title: {
+    tk: 'Menzesh kinolar',
+    ru: 'Similar movies',
+  },
 }
 
 onMounted(() => {
@@ -32,6 +42,11 @@ onMounted(() => {
       >
     </div>
   </div>
+  <MoviesBySubCatId
+    v-if="movie?.sub_categories[0]"
+    :id="movie?.sub_categories[0].id.toString()"
+    :data="data"
+  />
 </template>
 
 <style scoped>

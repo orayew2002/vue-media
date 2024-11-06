@@ -30,9 +30,7 @@ const onImageLoad = () => {
       <!-- Skeleton  -->
       <div v-if="loadingImage" class="skeleton"></div>
     </div>
-    <span class="movie_title"
-      >{{ movie.title[locale as keyof TLang] }} {{ movie.id }}</span
-    >
+    <span class="movie_title">{{ movie.title[locale as keyof TLang] }}</span>
   </RouterLink>
 </template>
 <style scoped>
