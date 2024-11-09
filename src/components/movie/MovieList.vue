@@ -14,9 +14,17 @@ const { locale } = useI18n()
 <template>
   <div class="movie_list_container">
     <div class="movie_list_header">
-      <RouterLink :to="'/movies/category/' + movies.id"
-        >{{ movies.title[locale as keyof TLang] }} ></RouterLink
-      >
+      <RouterLink :to="'/movies/category/' + movies.id">{{
+        movies.title[locale as keyof TLang]
+      }}</RouterLink>
+      <div class="show_all">
+        <span @click="$router.push('/movies/category/' + movies.id)"
+          >Hemmesi</span
+        >
+        <div class="right_arrow_img">
+          <img src="/right_arrow.svg" alt="right arrow" />
+        </div>
+      </div>
     </div>
     <div class="movie_list">
       <MovieItem
@@ -32,6 +40,7 @@ const { locale } = useI18n()
 .movie_list_container {
   margin-top: 1rem;
   overflow-x: auto;
+  margin-bottom: 3.5rem;
 }
 
 .movie_list {
@@ -41,21 +50,62 @@ const { locale } = useI18n()
   gap: 2rem;
   padding: 10px;
   overflow-x: scroll;
+  overflow-y: hidden;
   --webkit-overflow-scroll: none;
 }
 .movie_list::-webkit-scrollbar {
   display: none;
 }
 
+.movie_list_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+}
+
+.show_all {
+  padding: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  background-color: #18181a;
+  border-radius: 20px;
+  margin-right: 4px;
+  cursor: pointer;
+}
+.show_all > span {
+  color: #fff;
+}
+
 .movie_list_header > a {
   text-decoration: none;
   color: #ffff;
-  padding: 1rem 0.5rem;
+  /* padding: 1rem 0.5rem; */
+  padding-left: 0.5rem;
   font-size: 2rem;
 }
+
+.right_arrow_img {
+  background-color: black;
+  padding-inline: 10px;
+  padding-block: 4px;
+  border-radius: 10px;
+}
+
 @media screen and (max-width: 768px) {
   .movie_list_header > a {
     font-size: 1rem;
+  }
+  .show_all {
+    padding: 0.3rem 0.4rem;
+  }
+  .show_all > span {
+    font-size: 12px;
+  }
+  .right_arrow_img {
+    padding-inline: 7px;
+    padding-block: 2px;
   }
 }
 @media (min-width: 768px) and (max-width: 1440px) {

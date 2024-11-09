@@ -21,12 +21,18 @@
 
 .locales > span {
   display: block;
-  font-size: 2rem;
+  font-size: 1.4rem;
   cursor: pointer;
 }
 
 .underline_lang {
   border-bottom: 1px solid white;
+}
+
+@media screen and (min-width: 1430px) {
+  .locales > span {
+    font-size: 2rem;
+  }
 }
 </style>
 

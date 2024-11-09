@@ -1,9 +1,39 @@
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const searchExpanded = ref(false)
+
+const toggleSearch = () => {
+  searchExpanded.value = !searchExpanded.value
+}
+
+const searchValue = ref('')
+const router = useRouter()
+</script>
+
 <template>
   <div class="search-input" :class="{ expanded: searchExpanded }">
     <div class="search_icon">
       <img class="icon" src="/search.svg" @click="toggleSearch" />
     </div>
-    <input v-show="searchExpanded" type="text" placeholder="Search..." />
+    <form
+      @submit="
+        e => {
+          e.preventDefault()
+          router.push({
+            path: `/search/movies/${searchValue}`,
+          })
+        }
+      "
+    >
+      <input
+        v-show="searchExpanded"
+        type="text"
+        placeholder="Search..."
+        v-model="searchValue"
+      />
+    </form>
   </div>
 </template>
 
@@ -14,7 +44,7 @@
   border-radius: 20px;
   padding: 5px 10px;
   width: 44px;
-  height: 50px;
+  height: 40px;
   background-color: var(--slate-600);
   transition:
     width 0.3s ease,
@@ -48,7 +78,7 @@
   width: 60%;
   height: 100%;
 }
-.search-input > input {
+.search-input > form > input {
   flex-grow: 1;
   border: none;
   outline: none;
@@ -58,17 +88,13 @@
   color: var(--slate-200);
 }
 
-.search-input > input::placeholder {
+.search-input > form > input::placeholder {
   color: var(--slate-200);
 }
-</style>
 
-<script setup lang="ts">
-import { ref } from 'vue'
-
-const searchExpanded = ref(false)
-
-const toggleSearch = () => {
-  searchExpanded.value = !searchExpanded.value
+@media screen and (max-width: 768px) {
+  .search-input.expanded {
+    height: 40px;
+  }
 }
-</script>
+</style>

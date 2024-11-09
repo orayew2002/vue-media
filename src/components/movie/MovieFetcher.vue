@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { useMovieStore } from '@/store/movie'
 import MovieItem from '@/components/movie/MovieItem.vue'
-import { onMounted, ref, onUnmounted, watch, watchEffect } from 'vue'
-import { useRoute } from 'vue-router'
+import { onMounted, ref, onUnmounted, watch } from 'vue'
 import type { TLang } from '@/types/common'
-import AppLoading from '@/components/app/AppLoading.vue'
-import type { TMovieCategory } from '@/types/movie'
+import type { TMovie, TMovieCategory } from '@/types/movie'
 const store = useMovieStore()
 const loadTrigger = ref(null)
 let observer: IntersectionObserver | null = null
@@ -24,12 +22,8 @@ const createObserver = () => {
 
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
-      if (
-        entry.isIntersecting &&
-        store.hasMore &&
-        !store.loadingBySubIdMovies
-      ) {
-        store.fetchMoviesBySubCatId(props.id as string)
+      if (entry.isIntersecting && store.hasMore && !store.loadingForPaginated) {
+        store.fetchMoviesByIdWithPagination(props.id as string)
         console.log('in intersection')
       }
     })
@@ -50,8 +44,8 @@ watch(
   newVal => {
     if (newVal) {
       store.page = 1
-      store.getSubCatIdFn(props.id as string)
-      store.fetchMoviesBySubCatId(props.id as string)
+      store.hasMore = true
+      store.fetchMoviesByIdWithPagination(props.id as string)
     }
   },
   { immediate: true },
@@ -70,14 +64,11 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div
-    v-if="!store.loadingBySubIdMovies || !store.loadingSubCatId"
-    class="container"
-  >
-    <h1>{{ data.title[$i18n.locale as keyof TLang] }}</h1>
+  <div v-if="store.moviesWithScrollPagination" class="container">
+    <h1>{{ data?.title[$i18n.locale as keyof TLang] }}</h1>
     <div class="movies_by_category">
       <MovieItem
-        v-for="movie in store.moviesBySubCatId?.movies"
+        v-for="movie in store.moviesWithScrollPagination.movies"
         :key="movie.id"
         :movie="movie"
         class="movie-item"
@@ -91,19 +82,19 @@ onUnmounted(() => {
   >
     Loading more movies...
   </div>
-  <AppLoading v-if="store.loadingBySubIdMovies || store.loadingSubCatId" />
 </template>
 
 <style scoped>
 .container {
   width: 90%;
   margin-inline: auto;
+  padding-bottom: 1rem;
 }
 .movies_by_category {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   margin-inline: auto;
-  gap: 2rem;
+  gap: 1rem;
 }
 
 h1 {

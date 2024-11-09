@@ -39,7 +39,11 @@
         </div>
       </div>
       <div class="controls">
-        <button ref="play_pause_btn" @click="togglePlay" class="play-pause-btn">
+        <button
+          ref="play_pause_btn"
+          @click="togglePlayByClickingBtn"
+          class="play-pause-btn"
+        >
           <svg class="play-icon" viewBox="0 0 24 24">
             <path fill="currentColor" d="M8,5.14V19.14L19,12.14L8,5.14Z" />
           </svg>
@@ -187,6 +191,13 @@ const togglePlay = () => {
   }
 }
 
+const togglePlayByClickingBtn = () => {
+  if (video_ref.value) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    video_ref.value.paused ? video_ref.value.play() : video_ref.value.pause()
+  }
+}
+
 const handleKeydown = (e: KeyboardEvent) => {
   const tagName = document.activeElement?.tagName.toLowerCase()
 
@@ -227,7 +238,9 @@ const toggleTheater = () => {
 const toggleFullScreen = () => {
   if (document.fullscreenElement == null) {
     video_container_ref.value?.requestFullscreen()
-    // screen.orientation.lock('landscape')
+    if (isMobile.value) {
+      screen.orientation.lock('landscape')
+    }
   } else {
     document.exitFullscreen()
   }

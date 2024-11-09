@@ -29,8 +29,26 @@ const onImageLoad = () => {
       />
       <!-- Skeleton  -->
       <div v-if="loadingImage" class="skeleton"></div>
+      <div class="play_icon_item">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M22.99 11.7773C22.9219 10.8388 22.4205 9.92777 21.4859 9.39398L7.48782 1.39936C5.48785 0.25713 3 1.70127 3 4.00443V19.9937C3 22.2968 5.48785 23.741 7.48781 22.5988L21.4859 14.6041C22.4205 14.0703 22.9219 13.1593 22.99 12.2208C23.0226 12.0751 23.0226 11.9231 22.99 11.7773Z"
+            fill="white"
+          />
+        </svg>
+      </div>
     </div>
-    <span class="movie_title">{{ movie.title[locale as keyof TLang] }}</span>
+    <span class="movie_title"
+      >{{ movie.title[locale as keyof TLang] }} {{ movie.id }}</span
+    >
   </RouterLink>
 </template>
 <style scoped>
@@ -44,10 +62,10 @@ const onImageLoad = () => {
   position: relative;
   flex-shrink: 0;
   scroll-behavior: smooth;
-  width: 300px;
+  width: 100px;
   transform: scale(1);
   transition: transform 0.3s ease-in-out;
-  height: 100%;
+  height: 90%;
   overflow: hidden;
 }
 
@@ -86,9 +104,25 @@ const onImageLoad = () => {
   object-fit: cover;
 }
 
+.play_icon_item {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 /* Shimmer Effect */
 
-@media screen and (max-width: 768px) {
+@media screen and (min-width: 500px) and (max-width: 768px) {
   .movie_item {
     width: 120px;
     height: 90%;

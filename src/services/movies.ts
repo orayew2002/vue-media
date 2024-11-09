@@ -33,3 +33,8 @@ export const getHomePageMovies = async (): Promise<
 export const getMovieCategories = async (): Promise<
   AxiosResponse<TMovieCategory[]>
 > => api.get<TMovieCategory[]>('/categories/1/sub')
+
+export const getSearchedMovies = async (
+  searchValue: string,
+): Promise<AxiosResponse<TMovie[]>> =>
+  api.get<TMovie[]>(`/movies/search/${searchValue}`)

@@ -1,9 +1,11 @@
 import {
   getHomePageMovies,
   getMoviesByCatId,
+  getSearchedMovies,
   getSubCatById,
 } from '@/services/movies'
 import type {
+  TMovie,
   TMovieCategory,
   TMoviesBySubCatId,
   TMoviesHomePage,
@@ -12,16 +14,20 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export const useMovieStore = defineStore('counter', () => {
-  const loading = ref(false)
   const moviesHomePage = ref<TMoviesHomePage>([])
-  const moviesBySubCatId = ref<TMoviesBySubCatId>()
+  const moviesWithScrollPagination = ref<TMoviesBySubCatId>()
   const subCatIdData = ref<TMovieCategory>()
+  const moviesBySearch = ref<TMovie[]>([])
   const page = ref(1)
-  const count = ref(10)
+  const count = 10
   const hasMore = ref(true)
   const isMoviesFetched = ref(false)
-  const loadingBySubIdMovies = ref(false)
+  // Loadings
+  const loading = ref(false)
+  const loadingForPaginated = ref(false)
   const loadingSubCatId = ref(false)
+  const loadingSearched = ref(false)
+  const path = ref('sub')
   async function fetchMovies() {
     loading.value = true
     if (!isMoviesFetched.value) {
@@ -35,23 +41,22 @@ export const useMovieStore = defineStore('counter', () => {
     }
   }
 
-  async function fetchMoviesBySubCatId(id: string) {
-    console.log('hello it is me')
-    loadingBySubIdMovies.value = true
+  async function fetchMoviesByIdWithPagination(id: string) {
+    loadingForPaginated.value = true
     try {
-      const res = await getMoviesByCatId(id, page.value, count.value)
+      const res = await getMoviesByCatId(id, page.value, count)
       if (page.value === 1) {
-        moviesBySubCatId.value = res.data
-        if (res.data.total > page.value * count.value) {
+        moviesWithScrollPagination.value = res.data
+        if (res.data.total > page.value * count) {
           hasMore.value = true
           page.value += 1
         } else {
           hasMore.value = false
         }
       } else {
-        moviesBySubCatId.value?.movies.push(...res.data.movies)
-        console.log(res.data.total, page.value * count.value)
-        if (res.data.total > page.value * count.value) {
+        moviesWithScrollPagination.value?.movies.push(...res.data.movies)
+        console.log(res.data.total, page.value * count)
+        if (res.data.total > page.value * count) {
           hasMore.value = true
           page.value += 1
         } else {
@@ -61,7 +66,7 @@ export const useMovieStore = defineStore('counter', () => {
     } catch (err) {
       console.log(err)
     } finally {
-      loadingBySubIdMovies.value = false
+      loadingForPaginated.value = false
     }
   }
 
@@ -78,17 +83,34 @@ export const useMovieStore = defineStore('counter', () => {
     }
   }
 
+  async function getMoviesBySearch(searchVal: string) {
+    loadingSearched.value = true
+    try {
+      const res = await getSearchedMovies(searchVal)
+      moviesBySearch.value = res.data
+    } catch (err) {
+      loadingSearched.value = false
+      console.error(err)
+    } finally {
+      loadingSearched.value = false
+    }
+  }
+
   return {
     loading,
     moviesHomePage,
     fetchMovies,
-    fetchMoviesBySubCatId,
-    moviesBySubCatId,
+    fetchMoviesByIdWithPagination,
+    moviesWithScrollPagination,
     loadingSubCatId,
-    loadingBySubIdMovies,
+    loadingForPaginated,
     hasMore,
     getSubCatIdFn,
     subCatIdData,
     page,
+    path,
+    getMoviesBySearch,
+    loadingSearched,
+    moviesBySearch,
   }
 })

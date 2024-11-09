@@ -1,11 +1,17 @@
 <template>
-  <div>
-    <svg width="200" height="200">
+  <div class="svg_container">
+    <svg
+      width="80"
+      height="80"
+      viewBox="0 0 80 80"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <g class="rotate">
-        <circle cx="50" cy="90" r="20" fill="#00C0F2"></circle>
-        <circle cx="110" cy="90" r="20" fill="#EF4B85"></circle>
-        <circle cx="50" cy="150" r="20" fill="#FBB917"></circle>
-        <circle cx="110" cy="150" r="20" fill="#ffff"></circle>
+        <ellipse cx="30" cy="30" rx="11" ry="11.1058" fill="#00C0F2" />
+        <ellipse cx="50" cy="50" rx="11" ry="11.1058" fill="white" />
+        <ellipse cx="30" cy="50" rx="11" ry="11.1058" fill="#FBB917" />
+        <ellipse cx="50" cy="30" rx="11" ry="11.1058" fill="#EF4B85" />
       </g>
     </svg>
   </div>
@@ -21,16 +27,21 @@
   }
 }
 
-svg {
+.svg_container {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
 
+svg {
+  width: 100%;
+  height: 100%;
+}
+
 /* Apply animation to the group */
 .rotate {
-  transform-origin: 80px 120px; /* Center of the SVG canvas */
+  transform-origin: 40px 40px; /* Center of the SVG canvas */
   animation: rotateAnimation 4s linear infinite; /* Duration and infinite loop */
 }
 </style>

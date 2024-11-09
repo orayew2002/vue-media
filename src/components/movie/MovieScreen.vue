@@ -37,7 +37,10 @@ const onImageLoad = () => {
           }
         "
       >
-        ▶︎ Play
+        <div class="movie_screen__info__play">
+          <img src="/play.svg" alt="play svg" />
+          <span>Play</span>
+        </div>
       </button>
     </div>
     <img
@@ -111,10 +114,20 @@ img {
   text-wrap: wrap;
   color: var(--slate-100);
 }
+
+.movie_screen__info__play {
+  display: flex;
+  gap: 1rem;
+}
+
+.movie_screen__info__play > span {
+  color: white;
+}
+
 .movie_screen__info > button {
   padding: 0.6rem 2rem;
   color: color;
-  background-color: var(--slate-200);
+  background-color: var(--slate-600);
   border: none;
   font-weight: bold;
   font-size: 1rem;
@@ -123,7 +136,7 @@ img {
 }
 
 .movie_screen__info > button:hover {
-  background-color: rgb(241 245 249);
+  background-color: var(--slate-500);
 }
 
 @media screen and (max-width: 768px) {
