@@ -14,10 +14,11 @@ const data = {
     ru: 'Результаты поиска',
   } as TLang,
 }
-
+console.log(store.movieNotFound, 'movie not found')
 watch(
   () => route.params.search,
   newVal => {
+    store.movieNotFound = false
     store.getMoviesBySearch(newVal as string)
   },
   { immediate: true },
@@ -38,7 +39,7 @@ watch(
       />
     </div>
   </div>
-  <div v-else>
+  <div v-if="store.movieNotFound">
     <h1 class="not_found">Movie not found</h1>
   </div>
 </template>

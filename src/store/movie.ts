@@ -18,6 +18,7 @@ export const useMovieStore = defineStore('counter', () => {
   const moviesWithScrollPagination = ref<TMoviesBySubCatId>()
   const subCatIdData = ref<TMovieCategory>()
   const moviesBySearch = ref<TMovie[]>([])
+  const movieNotFound = ref(false)
   const page = ref(1)
   const count = 10
   const hasMore = ref(true)
@@ -87,6 +88,9 @@ export const useMovieStore = defineStore('counter', () => {
     loadingSearched.value = true
     try {
       const res = await getSearchedMovies(searchVal)
+      if (!res.data.length) {
+        movieNotFound.value = true
+      }
       moviesBySearch.value = res.data
     } catch (err) {
       loadingSearched.value = false
@@ -112,5 +116,6 @@ export const useMovieStore = defineStore('counter', () => {
     getMoviesBySearch,
     loadingSearched,
     moviesBySearch,
+    movieNotFound,
   }
 })

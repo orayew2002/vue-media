@@ -47,7 +47,7 @@
   align-items: center;
   top: 0;
   left: 0;
-  z-index: 5;
+  z-index: 105;
 }
 
 .header_logo_search {
