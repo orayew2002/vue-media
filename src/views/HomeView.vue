@@ -29,4 +29,8 @@ onMounted(() => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.movie-list-home:last-child {
+  margin-bottom: 3.5rem;
+}
+</style>

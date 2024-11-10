@@ -14,7 +14,7 @@ const data = {
     ru: 'Результаты поиска',
   } as TLang,
 }
-console.log(store.movieNotFound, 'movie not found')
+
 watch(
   () => route.params.search,
   newVal => {

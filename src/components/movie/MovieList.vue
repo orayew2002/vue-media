@@ -40,7 +40,7 @@ const { locale } = useI18n()
 .movie_list_container {
   margin-top: 1rem;
   overflow-x: auto;
-  margin-bottom: 3.5rem;
+  /* margin-bottom: 3.5rem; */
 }
 
 .movie_list {

@@ -1,5 +1,5 @@
 <svg width='50' height='50' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'>
-			<rect x='1' y='6' width='2.8' height='12' fill='#1928BB'>
+			<rect x='1' y='6' width='2.8' height='12' fill='#ffff'>
 				<animate
 					begin='spinner_Diec.begin+0.4s'
 					attributeName='y'
@@ -17,7 +17,7 @@
 					keySplines='.14,.73,.34,1;.65,.26,.82,.45'
 				/>
 			</rect>
-			<rect x='5.8' y='6' width='2.8' height='12' fill='blue'>
+			<rect x='5.8' y='6' width='2.8' height='12' fill='#ffff'>
 				<animate
 					begin='spinner_Diec.begin+0.2s'
 					attributeName='y'
@@ -35,7 +35,7 @@
 					keySplines='.14,.73,.34,1;.65,.26,.82,.45'
 				/>
 			</rect>
-			<rect x='10.6' y='6' width='2.8' height='12' fill='#114FB2'>
+			<rect x='10.6' y='6' width='2.8' height='12' fill='#ffff'>
 				<animate
 					id='spinner_Diec'
 					begin='0;spinner_dm8s.end-0.1s'
@@ -54,7 +54,7 @@
 					keySplines='.14,.73,.34,1;.65,.26,.82,.45'
 				/>
 			</rect>
-			<rect x='15.4' y='6' width='2.8' height='12' fill='blue'>
+			<rect x='15.4' y='6' width='2.8' height='12' fill='#ffff'>
 				<animate
 					begin='spinner_Diec.begin+0.2s'
 					attributeName='y'
@@ -72,7 +72,7 @@
 					keySplines='.14,.73,.34,1;.65,.26,.82,.45'
 				/>
 			</rect>
-			<rect x='20.2' y='6' width='2.8' height='12' fill='#1928BB'>
+			<rect x='20.2' y='6' width='2.8' height='12' fill='#ffff'>
 				<animate
 					id='spinner_dm8s'
 					begin='spinner_Diec.begin+0.4s'

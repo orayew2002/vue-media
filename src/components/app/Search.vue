@@ -45,7 +45,7 @@ const router = useRouter()
   padding: 5px 10px;
   width: 44px;
   height: 40px;
-  background-color: var(--slate-600);
+  background-color: var(--slate-800);
   transition:
     width 0.3s ease,
     height 0.3s ease,
@@ -84,7 +84,7 @@ const router = useRouter()
   outline: none;
   width: 100%;
   height: 100%;
-  background-color: var(--slate-600);
+  background-color: transparent;
   color: var(--slate-200);
 }
 

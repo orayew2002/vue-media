@@ -9,18 +9,15 @@
         />
         <Search v-if="!isMobile" />
       </div>
-
+      <CategoryMenu
+        v-if="$route.name?.toString().includes('movie') && isMobile"
+        :categories="categories"
+      />
       <div class="links">
         <ul>
           <li v-for="link in links" :key="link.name">
             <RouterLink :to="link.path">{{ $t(link.name) }}</RouterLink>
-            <div class="dropdown_container" v-if="link.name === 'movies'">
-              <li v-for="cat in categories">
-                <RouterLink :key="cat.id" :to="'/movies/category/' + cat.id">{{
-                  cat.title[locale as keyof TLang]
-                }}</RouterLink>
-              </li>
-            </div>
+            <CategoryLinks :categories="categories" :link="link" />
           </li>
         </ul>
       </div>
@@ -90,37 +87,6 @@ a {
 a:hover {
   color: var(--slate-100);
 }
-li:hover .dropdown_container {
-  display: block;
-}
-
-.dropdown_container {
-  background-color: var(--slate-600);
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 200px;
-  transition: 0.7s ease-in-out;
-  border-radius: 5px;
-}
-
-.dropdown_container > li {
-  padding: 4px;
-  width: 100%;
-}
-
-.dropdown_container > li > a {
-  display: block;
-  color: #fff;
-  font-size: 16px;
-  padding-bottom: 3px;
-}
-
-.dropdown_container > li:hover {
-  background-color: var(--slate-500);
-  border-radius: 5px;
-}
 
 @media screen and (max-width: 768px) {
   .header_logo_search > img {
@@ -150,6 +116,7 @@ li:hover .dropdown_container {
 <script setup lang="ts">
 import { getMovieCategories } from '@/services/movies'
 import Locales from '@/components/app/Locales.vue'
+import CategoryMenu from '@/components/app/CategoryMenu.vue'
 import type { TLang } from '@/types/common'
 import type { TMovieCategory } from '@/types/movie'
 import { onMounted, onUnmounted, ref, watchEffect } from 'vue'
@@ -159,6 +126,7 @@ import Search from './Search.vue'
 import BottomMenu from '@/components/app/BottomMenu.vue'
 import { links } from '@/utils/links'
 import { useIsMobile } from '@/composables/useIsMobile'
+import CategoryLinks from '@/components/app/CategoryLinks.vue'
 const { isMobile } = useIsMobile()
 const categories = ref<TMovieCategory[]>([])
 const menuIsOpened = ref(false)

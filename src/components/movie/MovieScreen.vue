@@ -118,6 +118,7 @@ img {
 .movie_screen__info__play {
   display: flex;
   gap: 1rem;
+  padding: 5px;
 }
 
 .movie_screen__info__play > span {
@@ -127,12 +128,13 @@ img {
 .movie_screen__info > button {
   padding: 0.6rem 2rem;
   color: color;
-  background-color: var(--slate-600);
+  background-color: var(--slate-800);
   border: none;
   font-weight: bold;
   font-size: 1rem;
   border-radius: 4px;
   cursor: pointer;
+  text-transform: uppercase;
 }
 
 .movie_screen__info > button:hover {

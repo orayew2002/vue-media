@@ -12,10 +12,9 @@
     }"
   >
     <video
-      autoplay
-      @playing="() => handlePlayPause(false)"
+      @playing="() => (isPaused = false)"
       @pause="() => handlePlayPause(true)"
-      @play="() => handlePlayPause(true)"
+      @play="() => handlePlayPause(false)"
       @click="togglePlay"
       @volumechange="volumeChangeHandler"
       @timeupdate="timeUpdateHandler"
@@ -151,12 +150,14 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watchEffect } from 'vue'
+import { nextTick, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue'
 import dashjs from 'dashjs'
 import formatDuration from '@/utils/formatDuration'
 import { useIsMobile } from '@/composables/useIsMobile'
 
 const { isMobile } = useIsMobile()
+let player: any = null
+const url = ref('')
 const isPaused = ref(true)
 const isVideoLoading = ref(true)
 const video_ref = ref<HTMLVideoElement | null>(null)
@@ -420,7 +421,44 @@ const onPlayScreenIconClick = () => {
   video_ref.value?.play()
   isPaused.value = false
 }
-let player: any = null
+
+watch(
+  () => props.id,
+  async newId => {
+    await nextTick()
+    if (newId) {
+      player = dashjs.MediaPlayer().create()
+      player.initialize(
+        video_ref.value,
+        `${import.meta.env.VITE_API_URL}/movies/video/${newId}`,
+        true,
+      )
+      // Set up event listener for playback metadata
+      player.on(dashjs.MediaPlayer.events.PLAYBACK_METADATA_LOADED, () => {
+        totalVideoDuration.value = formatDuration(player.duration())
+      })
+      player.on(dashjs.MediaPlayer.events.PLAYBACK_LOADED_DATA, () => {
+        isVideoLoading.value = false
+      })
+
+      player.on(dashjs.MediaPlayer.events.PLAYBACK_SEEKING, () => {
+        isVideoLoading.value = true
+      })
+
+      player.on(dashjs.MediaPlayer.events.PLAYBACK_SEEKED, () => {
+        isVideoLoading.value = false
+      })
+
+      player.on(dashjs.MediaPlayer.events.PLAYBACK_STALLED, () => {
+        isVideoLoading.value = true
+      })
+      player.on(dashjs.MediaPlayer.events.PLAYBACK_WAITING, () => {
+        isVideoLoading.value = true
+      })
+    }
+  },
+  { immediate: true },
+)
 
 onMounted(() => {
   document.addEventListener('keydown', handleKeydown)
@@ -436,35 +474,35 @@ onMounted(() => {
   video_ref.value?.addEventListener('leavepictureinpicture', () =>
     toggleMiniPlayerMode(false),
   )
-  if (props.id) {
-    const URL = `${import.meta.env.VITE_API_URL}/movies/video/${props.id}`
-    player = dashjs.MediaPlayer().create()
-    player.initialize(video_ref.value as HTMLMediaElement, URL, true)
 
-    // Listen for the playback metadata event to get the duration
-    player.on(dashjs.MediaPlayer.events.PLAYBACK_METADATA_LOADED, () => {
-      totalVideoDuration.value = formatDuration(player.duration())
-    })
-  }
+  // player = dashjs.MediaPlayer().create()
+  // player.initialize(
+  //   video_ref.value,
+  //   `${import.meta.env.VITE_API_URL}/movies/video/${1}`,
+  //   true,
+  // )
+  // // Set up event listener for playback metadata
+  // player.on(dashjs.MediaPlayer.events.PLAYBACK_METADATA_LOADED, () => {
+  //   totalVideoDuration.value = formatDuration(player.duration())
+  // })
+  // player.on(dashjs.MediaPlayer.events.PLAYBACK_LOADED_DATA, () => {
+  //   isVideoLoading.value = false
+  // })
 
-  player.on(dashjs.MediaPlayer.events.PLAYBACK_LOADED_DATA, () => {
-    isVideoLoading.value = false
-  })
+  // player.on(dashjs.MediaPlayer.events.PLAYBACK_SEEKING, () => {
+  //   isVideoLoading.value = true
+  // })
 
-  player.on(dashjs.MediaPlayer.events.PLAYBACK_SEEKING, () => {
-    isVideoLoading.value = true
-  })
+  // player.on(dashjs.MediaPlayer.events.PLAYBACK_SEEKED, () => {
+  //   isVideoLoading.value = false
+  // })
 
-  player.on(dashjs.MediaPlayer.events.PLAYBACK_SEEKED, () => {
-    isVideoLoading.value = false
-  })
-
-  player.on(dashjs.MediaPlayer.events.PLAYBACK_STALLED, () => {
-    isVideoLoading.value = true
-  })
-  player.on(dashjs.MediaPlayer.events.PLAYBACK_WAITING, () => {
-    isVideoLoading.value = true
-  })
+  // player.on(dashjs.MediaPlayer.events.PLAYBACK_STALLED, () => {
+  //   isVideoLoading.value = true
+  // })
+  // player.on(dashjs.MediaPlayer.events.PLAYBACK_WAITING, () => {
+  //   isVideoLoading.value = true
+  // })
 })
 
 console.log(isMobile.value, 'mobile value')
