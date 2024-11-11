@@ -7,7 +7,7 @@ const props = defineProps<{
 }>()
 </script>
 <template>
-  <div class="music_item">
+  <div @click="$emit('musicClick', music.path)" class="music_item">
     <svg
       version="1.1"
       id="Capa_1"
@@ -37,6 +37,15 @@ const props = defineProps<{
   align-items: center;
   background-color: transparent;
   gap: 1rem;
+}
+
+.music_item:last-child {
+  margin-bottom: 3.3rem;
+}
+
+.music_item:hover {
+  background-color: var(--slate-900);
+  cursor: pointer;
 }
 
 .music_item::before {

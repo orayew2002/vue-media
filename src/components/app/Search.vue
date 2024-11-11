@@ -30,7 +30,7 @@ const router = useRouter()
       <input
         v-show="searchExpanded"
         type="text"
-        placeholder="Search..."
+        placeholder="Titanic"
         v-model="searchValue"
       />
     </form>
@@ -89,7 +89,7 @@ const router = useRouter()
 }
 
 .search-input > form > input::placeholder {
-  color: var(--slate-200);
+  color: var(--slate-400);
 }
 
 @media screen and (max-width: 768px) {

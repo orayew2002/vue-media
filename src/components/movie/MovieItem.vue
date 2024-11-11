@@ -4,7 +4,6 @@ import { useI18n } from 'vue-i18n'
 import type { TLang } from '@/types/common'
 import formatDuration from '@/utils/formatDuration'
 import { ref } from 'vue'
-import { truncate } from '@/utils/truncate'
 import { useIsMobile } from '@/composables/useIsMobile'
 const env = import.meta.env.VITE_API_URL
 const loadingImage = ref(true)

@@ -18,9 +18,9 @@ const { locale } = useI18n()
         movies.title[locale as keyof TLang]
       }}</RouterLink>
       <div class="show_all">
-        <span @click="$router.push('/movies/category/' + movies.id)"
-          >Hemmesi</span
-        >
+        <span @click="$router.push('/movies/category/' + movies.id)">{{
+          $t('all')
+        }}</span>
         <div class="right_arrow_img">
           <img src="/right_arrow.svg" alt="right arrow" />
         </div>

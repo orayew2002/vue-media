@@ -39,7 +39,7 @@ const { isMobile } = useIsMobile()
       >
         <div class="movie_screen__info__play">
           <img src="/play.svg" alt="play svg" />
-          <span v-if="!isMobile">Play</span>
+          <span v-if="!isMobile">{{ $t('play') }}</span>
         </div>
       </button>
     </div>

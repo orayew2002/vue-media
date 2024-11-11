@@ -40,7 +40,7 @@ watch(
     </div>
   </div>
   <div v-if="store.movieNotFound">
-    <h1 class="not_found">Movie not found</h1>
+    <h1 class="not_found">{{ $t('movie_not_found') }}</h1>
   </div>
 </template>
 

@@ -26,8 +26,8 @@ async function fetchMovieById() {
 const data = {
   id: 1,
   title: {
-    tk: 'Menzesh kinolar',
-    ru: 'Similar movies',
+    tk: 'Meňzeş kinolar',
+    ru: 'Похожие фильмы',
   },
 }
 

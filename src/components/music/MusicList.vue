@@ -5,10 +5,22 @@ import type { TMusic } from '@/types/music'
 const props = defineProps<{
   musicAll: TMusic[]
 }>()
+
+const musicClickHandler = (path: string) => {
+  console.log('path', path)
+  if (path) {
+    window.open(`${import.meta.env.VITE_API_URL}${path}`, '_blank')
+  }
+}
 </script>
 <template>
   <div class="music_list">
-    <MusicItem v-for="music in props.musicAll" :key="music.id" :music="music" />
+    <MusicItem
+      @music-click="musicClickHandler"
+      v-for="music in props.musicAll"
+      :key="music.id"
+      :music="music"
+    />
   </div>
 </template>
 
