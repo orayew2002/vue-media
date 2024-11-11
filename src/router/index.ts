@@ -4,6 +4,7 @@ import MovieView from '@/views/MovieView.vue'
 import MoviesByCategory from '@/views/MoviesByCategory.vue'
 import SearchView from '@/views/Search/SearchView.vue'
 import SearchMovie from '@/views/Search/SearchMovie.vue'
+import Music from '@/views/Music.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -11,6 +12,11 @@ const router = createRouter({
       path: '/',
       name: 'movies',
       component: HomeView,
+    },
+    {
+      path: '/music',
+      name: 'music',
+      component: Music,
     },
     {
       path: '/movies/:id',

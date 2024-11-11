@@ -97,6 +97,10 @@ onUnmounted(() => {
   gap: 1rem;
 }
 
+.movies_by_category:last-child {
+  margin-bottom: 3.3rem;
+}
+
 h1 {
   color: var(--slate-300);
   padding-block: 1rem;

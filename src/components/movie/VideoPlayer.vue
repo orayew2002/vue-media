@@ -23,7 +23,7 @@
     ></video>
     <div @dblclick="skipForwardHandler" class="skipForward" />
     <div @dblclick="skipBackwardHandler" class="skipBackward" />
-    <div class="video-controls-container">
+    <div class="video_contorls_container" :class="showControls ? 'hide' : ''">
       <div
         ref="timeline_container_ref"
         class="timeline-container"
@@ -130,21 +130,26 @@
         </button>
       </div>
     </div>
-    <div class="video_status_container">
+    <div class="video_status_container" :class="showControls ? 'hide' : ''">
       <div v-if="isVideoLoading">
         <img src="/bars-scale-middle.svg" alt="" />
       </div>
       <div v-else class="pause_play_icons">
-        <div
+        <button
           class="pause_icon"
           @click="onPauseScreenIconClick"
           v-if="!isPaused"
         >
-          <span />
-          <span />
-        </div>
+          <svg class="pause-icon" viewBox="0 0 24 24">
+            <path fill="#ffff" d="M14,19H18V5H14M6,19H10V5H6V19Z" />
+          </svg>
+        </button>
 
-        <span @click="onPlayScreenIconClick" v-else class="play_icon">▶︎</span>
+        <button @click="onPlayScreenIconClick" v-else class="play_icon">
+          <svg class="play-icon" viewBox="0 0 24 24">
+            <path fill="#fff" d="M8,5.14V19.14L19,12.14L8,5.14Z" />
+          </svg>
+        </button>
       </div>
     </div>
   </div>
@@ -174,6 +179,7 @@ const totalVideoDuration = ref('')
 const currentTimeOfVideo = ref('0:00')
 const speed = ref('1x')
 const isScrubbing = ref(false)
+const showControls = ref(false)
 const props = defineProps({
   id: {
     type: String,
@@ -186,6 +192,9 @@ const handlePlayPause = (val: boolean) => {
 }
 
 const togglePlay = () => {
+  if (isMobile) {
+    showControls.value = !showControls.value
+  }
   if (video_ref.value && !isMobile.value) {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     video_ref.value.paused ? video_ref.value.play() : video_ref.value.pause()
@@ -565,7 +574,7 @@ video {
   -webkit-tap-highlight-color: transparent;
 }
 
-.video-controls-container {
+.video_contorls_container {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -576,7 +585,7 @@ video {
   transition: opacity 150ms ease-in-out;
 }
 
-.video-controls-container::before {
+.video_contorls_container::before {
   content: '';
   position: absolute;
   bottom: 0;
@@ -587,9 +596,9 @@ video {
   pointer-events: none;
 }
 
-.video-container:hover .video-controls-container,
-.video-container:focus-within .video-controls-container,
-.video-container.paused .video-controls-container {
+.video-container:hover .video_contorls_container,
+.video-container:focus-within .video_contorls_container,
+.video-container.paused .video_contorls_container {
   opacity: 1;
 }
 
@@ -602,14 +611,14 @@ video {
   opacity: 1;
 }
 
-.video-controls-container .controls {
+.video_contorls_container .controls {
   display: flex;
   gap: 0.5rem;
   padding: 0.25rem;
   align-items: center;
 }
 
-.video-controls-container .controls button {
+.video_contorls_container .controls button {
   background: none;
   border: none;
   color: inherit;
@@ -622,7 +631,7 @@ video {
   transition: opacity 150ms ease-in-out;
 }
 
-.video-controls-container .controls button:hover {
+.video_contorls_container .controls button:hover {
   opacity: 1;
 }
 
@@ -695,7 +704,7 @@ video {
   flex-grow: 1;
 }
 
-.video-controls-container .controls button.wide-btn {
+.video_contorls_container .controls button.wide-btn {
   width: 50px;
 }
 
@@ -790,15 +799,17 @@ video {
   transition: all 0.3s ease-in-out;
 }
 
-.pause_play_icons > .pause_icon {
-  display: flex;
-  gap: 1.5rem;
-}
-.pause_play_icons > .pause_icon > span {
-  display: block;
-  width: 20px;
-  height: 50px;
-  background-color: white;
+.pause_play_icons > button {
+  background: none;
+  border: none;
+  color: inherit;
+  padding: 0;
+  height: 30px;
+  width: 30px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: opacity 150ms ease-in-out;
 }
 
 .pause_play_icons > span {
@@ -807,18 +818,29 @@ video {
   color: white;
   cursor: pointer;
 }
-
-@media screen and (max-width: 768px) {
+.hide {
+  display: none;
+}
+@media screen and (max-width: 900px) {
   .pause_play_icons > span {
-    font-size: 3rem;
+    font-size: 1.5rem;
   }
 
   .pause_play_icons > .pause_icon {
-    gap: 1rem;
+    gap: 1.2rem;
+  }
+
+  .pause_play_icons > .pause_icon {
+    display: flex;
+    gap: 4px;
   }
   .pause_play_icons > .pause_icon > span {
-    width: 10px;
-    height: 30px;
+    width: 8px;
+    height: 15px;
+  }
+  .video_status_container > img {
+    width: 12px;
+    height: 15px;
   }
 }
 </style>

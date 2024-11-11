@@ -3,6 +3,8 @@ import type { TMovie } from '@/types/movie'
 import { useI18n } from 'vue-i18n'
 import type { TLang } from '@/types/common'
 import { ref } from 'vue'
+import { truncate } from '@/utils/truncate'
+import { useIsMobile } from '@/composables/useIsMobile'
 const env = import.meta.env.VITE_API_URL
 const loadingImage = ref(true)
 const props = defineProps<{
@@ -11,13 +13,11 @@ const props = defineProps<{
 
 const { locale } = useI18n()
 
-const truncate = (desc: string) => {
-  const max = 200
-  return desc.length > max ? desc.slice(0, max) + '...' : desc
-}
 const onImageLoad = () => {
   loadingImage.value = false
 }
+
+const { isMobile } = useIsMobile()
 </script>
 
 <template>
@@ -27,7 +27,7 @@ const onImageLoad = () => {
     <div class="movie_screen__info">
       <span>{{ movie.title[locale as keyof TLang] }}</span>
       <p>
-        {{ truncate(movie.description[locale as keyof TLang]) }}
+        {{ truncate(movie.description[locale as keyof TLang], 200) }}
       </p>
       <button
         @click="
@@ -39,7 +39,7 @@ const onImageLoad = () => {
       >
         <div class="movie_screen__info__play">
           <img src="/play.svg" alt="play svg" />
-          <span>Play</span>
+          <span v-if="!isMobile">Play</span>
         </div>
       </button>
     </div>
@@ -146,18 +146,18 @@ img {
     height: 400px;
   }
   .movie_screen__info {
-    top: 30%;
+    top: 50%;
   }
   .movie_screen__info > p {
     width: 70vw;
-    font-size: small;
+    font-size: 10px;
   }
   .movie_screen__info > span {
-    font-size: 2rem;
+    font-size: 1rem;
   }
 
   .movie_screen__info > button {
-    padding: 0.3rem 1rem;
+    padding: 0.3rem 0.2rem;
   }
 }
 

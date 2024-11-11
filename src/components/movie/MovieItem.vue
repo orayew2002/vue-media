@@ -4,6 +4,8 @@ import { useI18n } from 'vue-i18n'
 import type { TLang } from '@/types/common'
 import formatDuration from '@/utils/formatDuration'
 import { ref } from 'vue'
+import { truncate } from '@/utils/truncate'
+import { useIsMobile } from '@/composables/useIsMobile'
 const env = import.meta.env.VITE_API_URL
 const loadingImage = ref(true)
 
@@ -16,6 +18,8 @@ const { locale } = useI18n()
 const onImageLoad = () => {
   loadingImage.value = false
 }
+
+const { isMobile } = useIsMobile()
 </script>
 
 <template>
@@ -31,8 +35,8 @@ const onImageLoad = () => {
       <div v-if="loadingImage" class="skeleton"></div>
       <div class="play_icon_item">
         <svg
-          width="24"
-          height="24"
+          :width="isMobile ? '14' : '24'"
+          :height="isMobile ? '14' : '24'"
           viewBox="0 0 24 24"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -46,9 +50,7 @@ const onImageLoad = () => {
         </svg>
       </div>
     </div>
-    <span class="movie_title"
-      >{{ movie.title[locale as keyof TLang] }} {{ movie.id }}</span
-    >
+    <span class="movie_title">{{ movie.title[locale as keyof TLang] }}</span>
   </RouterLink>
 </template>
 <style scoped>
@@ -75,7 +77,7 @@ const onImageLoad = () => {
 }
 
 .movie_title {
-  font-size: medium;
+  font-size: 10px;
   text-transform: capitalize;
   color: var(--movie-title);
   display: block;
@@ -93,7 +95,7 @@ const onImageLoad = () => {
   background: rgba(0, 0, 0, 0.4);
   padding: 2px 5px;
   border-radius: 5px;
-  font-size: smaller;
+  font-size: 8px;
   color: white;
 }
 
@@ -120,6 +122,11 @@ const onImageLoad = () => {
   align-items: center;
 }
 
+.play_icon_item > svg {
+  width: 14;
+  height: 14;
+}
+
 /* Shimmer Effect */
 
 @media screen and (min-width: 500px) and (max-width: 768px) {
@@ -127,15 +134,27 @@ const onImageLoad = () => {
     width: 120px;
     height: 90%;
   }
-  .movie_title {
-    font-size: small;
-  }
 }
 
 @media (min-width: 768px) and (max-width: 1440px) {
   .movie_item {
     width: 260px;
     height: 300px;
+  }
+  .movie_title {
+    font-size: medium;
+  }
+  .movie_duration {
+    font-size: small;
+  }
+}
+
+@media (min-width: 1440px) {
+  .movie_title {
+    font-size: large;
+  }
+  .movie_duration {
+    font-size: small;
   }
 }
 </style>

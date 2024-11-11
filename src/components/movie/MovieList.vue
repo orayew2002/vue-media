@@ -69,7 +69,7 @@ const { locale } = useI18n()
   justify-content: center;
   align-items: center;
   gap: 1rem;
-  background-color: #18181a;
+  background-color: var(--bg-new);
   border-radius: 20px;
   margin-right: 4px;
   cursor: pointer;
@@ -94,17 +94,26 @@ const { locale } = useI18n()
 }
 
 @media screen and (max-width: 768px) {
+  .movie_list_container {
+    margin-top: 2px;
+    /* margin-bottom: 3.5rem; */
+  }
+  .movie_list {
+    gap: 10px;
+    padding: 6px;
+  }
   .movie_list_header > a {
-    font-size: 1rem;
-  }
-  .show_all {
-    padding: 0.3rem 0.4rem;
-  }
-  .show_all > span {
     font-size: 12px;
   }
+  .show_all {
+    padding: 2px;
+    border-radius: 10px;
+  }
+  .show_all > span {
+    font-size: 10px;
+  }
   .right_arrow_img {
-    padding-inline: 7px;
+    padding-inline: 3px;
     padding-block: 2px;
   }
 }
