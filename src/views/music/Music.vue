@@ -45,15 +45,29 @@ onUnmounted(() => {
 })
 </script>
 <template>
-  <MusicList
-    v-if="store.music?.musics.length"
-    :music-all="store.music?.musics"
-  />
-  <div
-    ref="loadTrigger"
-    class="load-trigger"
-    v-if="!store.loading && store.hasMore"
-  >
-    Loading more music...
+  <div class="music_container">
+    <MusicList
+      v-if="store.music?.musics.length"
+      :music-all="store.music?.musics"
+    />
+    <router-view />
+    <div
+      ref="loadTrigger"
+      class="load-trigger"
+      v-if="!store.loading && store.hasMore"
+    >
+      Loading more music...
+    </div>
   </div>
 </template>
+<style scoped>
+.music_container {
+  position: relative;
+}
+.load-trigger {
+  color: white;
+  font-size: 1.2rem;
+  text-align: center;
+  padding: 1rem 0;
+}
+</style>

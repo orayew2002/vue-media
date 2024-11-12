@@ -1,10 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '@/views/HomeView.vue'
-import MovieView from '@/views/MovieView.vue'
-import MoviesByCategory from '@/views/MoviesByCategory.vue'
-import SearchView from '@/views/Search/SearchView.vue'
-import SearchMovie from '@/views/Search/SearchMovie.vue'
-import Music from '@/views/Music.vue'
+import HomeView from '@/views/home/HomeView.vue'
+import MovieView from '@/views/movie/MovieView.vue'
+import MoviesByCategory from '@/views/movie/MoviesByCategory.vue'
+import SearchView from '@/views/search/SearchView.vue'
+import SearchMovie from '@/views/search/SearchMovie.vue'
+import Music from '@/views/music/Music.vue'
+import MusicItemView from '@/views/music/MusicItemView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -17,6 +18,13 @@ const router = createRouter({
       path: '/music',
       name: 'music',
       component: Music,
+      children: [
+        {
+          path: ':id',
+          name: 'music-id',
+          component: MusicItemView,
+        },
+      ],
     },
     {
       path: '/movies/:id',

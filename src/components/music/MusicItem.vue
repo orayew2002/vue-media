@@ -1,13 +1,25 @@
 <script setup lang="ts">
+import { useIsMobile } from '@/composables/useIsMobile'
 import type { TLang } from '@/types/common'
 import type { TMusic } from '@/types/music'
+import { useRoute } from 'vue-router'
 
 const props = defineProps<{
   music: TMusic
 }>()
+const { isMobile } = useIsMobile()
+const route = useRoute()
+console.log(route.params.id, 'id')
 </script>
 <template>
-  <div @click="$emit('musicClick', music.path)" class="music_item">
+  <div
+    @click="$emit('musicClick', music.id)"
+    class="music_item"
+    :class="{
+      'bg-dark': music.id.toString() === $route.params.id,
+      mb: isMobile,
+    }"
+  >
     <svg
       version="1.1"
       id="Capa_1"
@@ -39,7 +51,11 @@ const props = defineProps<{
   gap: 1rem;
 }
 
-.music_item:last-child {
+.bg-dark {
+  background-color: var(--slate-800);
+}
+
+.mb:last-child {
   margin-bottom: 3.3rem;
 }
 
@@ -53,7 +69,7 @@ const props = defineProps<{
   position: absolute;
   top: 5px;
   left: 5px;
-  background-color: var(--slate-800);
+  background-color: var(--slate-600);
   width: 40px;
   height: 40px;
   border-radius: 5px;

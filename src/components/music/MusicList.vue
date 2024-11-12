@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import MusicItem from '@/components/music/MusicItem.vue'
 import type { TMusic } from '@/types/music'
-
+import { useRouter } from 'vue-router'
+const router = useRouter()
 const props = defineProps<{
   musicAll: TMusic[]
 }>()
 
-const musicClickHandler = (path: string) => {
-  console.log('path', path)
-  if (path) {
-    window.open(`${import.meta.env.VITE_API_URL}${path}`, '_blank')
-  }
+const musicClickHandler = (id: string) => {
+  router.push('/music/' + id)
+  // if (path) {
+  //   window.open(`${import.meta.env.VITE_API_URL}${path}`, '_blank')
+  // }
 }
 </script>
 <template>

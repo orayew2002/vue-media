@@ -49,7 +49,9 @@ const { isMobile } = useIsMobile()
         </svg>
       </div>
     </div>
-    <span class="movie_title">{{ movie.title[locale as keyof TLang] }}</span>
+    <span class="movie_title"
+      >{{ movie.title[locale as keyof TLang] }} {{ movie.id }}</span
+    >
   </RouterLink>
 </template>
 <style scoped>

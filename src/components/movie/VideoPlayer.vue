@@ -135,17 +135,11 @@
         <img src="/bars-scale-middle.svg" alt="" />
       </div>
       <div v-else class="pause_play_icons">
-        <button
-          class="pause_icon"
-          @click="onPauseScreenIconClick"
-          v-if="!isPaused"
-        >
+        <button @click="onTogglePlayPuse">
           <svg class="pause-icon" viewBox="0 0 24 24">
             <path fill="#ffff" d="M14,19H18V5H14M6,19H10V5H6V19Z" />
           </svg>
-        </button>
 
-        <button @click="onPlayScreenIconClick" v-else class="play_icon">
           <svg class="play-icon" viewBox="0 0 24 24">
             <path fill="#fff" d="M8,5.14V19.14L19,12.14L8,5.14Z" />
           </svg>
@@ -155,14 +149,13 @@
   </div>
 </template>
 <script setup lang="ts">
-import { nextTick, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue'
+import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import dashjs from 'dashjs'
 import formatDuration from '@/utils/formatDuration'
 import { useIsMobile } from '@/composables/useIsMobile'
 
 const { isMobile } = useIsMobile()
 let player: any = null
-const url = ref('')
 const isPaused = ref(true)
 const isVideoLoading = ref(true)
 const video_ref = ref<HTMLVideoElement | null>(null)
@@ -249,7 +242,7 @@ const toggleFullScreen = () => {
   if (document.fullscreenElement == null) {
     video_container_ref.value?.requestFullscreen()
     if (isMobile.value) {
-      screen.orientation.lock('landscape')
+      ;(screen.orientation as any).lock('landscape')
     }
   } else {
     document.exitFullscreen()
@@ -345,6 +338,7 @@ const playbackHandler = () => {
 // Timeline
 
 const handleTimeLineUpdate = (e: any) => {
+  console.log(e, 'handle time line')
   const rect = timeline_container_ref.value?.getBoundingClientRect()
   if (!rect) return
 
@@ -378,6 +372,7 @@ const handleTimeLineUpdate = (e: any) => {
 }
 
 const toggleScrubbing = (e: MouseEvent | TouchEvent) => {
+  console.log('toggle scrubbing')
   const rect = timeline_container_ref.value?.getBoundingClientRect()
   if (!rect) return
   // Get x position based on event type (mouse or touch)
@@ -390,9 +385,12 @@ const toggleScrubbing = (e: MouseEvent | TouchEvent) => {
 
   isScrubbing.value = (e instanceof MouseEvent && e.buttons & 1) === 1
   if (isScrubbing.value) {
+    console.log('if video')
     wasPaused = video_ref.value?.paused as boolean
     video_ref.value?.pause()
+    console.log('in if', wasPaused, 'was paused')
   } else {
+    console.log('else video')
     if (video_ref.value) {
       video_ref.value.currentTime = percent * video_ref.value?.duration
     }
@@ -402,11 +400,12 @@ const toggleScrubbing = (e: MouseEvent | TouchEvent) => {
 }
 
 const documentMouseupHandler = (e: any) => {
-  console.log('touch end')
+  console.log('mouse up')
   if (isScrubbing.value) toggleScrubbing(e)
 }
 
 const documentMouseMoveHandler = (e: any) => {
+  console.log('mouse move')
   if (isScrubbing.value) handleTimeLineUpdate(e)
 }
 
@@ -422,13 +421,14 @@ const skipBackwardHandler = () => {
   }
 }
 
-const onPauseScreenIconClick = () => {
-  video_ref.value?.pause()
-  isPaused.value = true
-}
-const onPlayScreenIconClick = () => {
-  video_ref.value?.play()
-  isPaused.value = false
+const onTogglePlayPuse = () => {
+  if (video_ref.value?.paused) {
+    video_ref.value?.play()
+    isPaused.value = true
+  } else {
+    video_ref.value?.pause()
+    isPaused.value = false
+  }
 }
 
 watch(
@@ -483,35 +483,6 @@ onMounted(() => {
   video_ref.value?.addEventListener('leavepictureinpicture', () =>
     toggleMiniPlayerMode(false),
   )
-
-  // player = dashjs.MediaPlayer().create()
-  // player.initialize(
-  //   video_ref.value,
-  //   `${import.meta.env.VITE_API_URL}/movies/video/${1}`,
-  //   true,
-  // )
-  // // Set up event listener for playback metadata
-  // player.on(dashjs.MediaPlayer.events.PLAYBACK_METADATA_LOADED, () => {
-  //   totalVideoDuration.value = formatDuration(player.duration())
-  // })
-  // player.on(dashjs.MediaPlayer.events.PLAYBACK_LOADED_DATA, () => {
-  //   isVideoLoading.value = false
-  // })
-
-  // player.on(dashjs.MediaPlayer.events.PLAYBACK_SEEKING, () => {
-  //   isVideoLoading.value = true
-  // })
-
-  // player.on(dashjs.MediaPlayer.events.PLAYBACK_SEEKED, () => {
-  //   isVideoLoading.value = false
-  // })
-
-  // player.on(dashjs.MediaPlayer.events.PLAYBACK_STALLED, () => {
-  //   isVideoLoading.value = true
-  // })
-  // player.on(dashjs.MediaPlayer.events.PLAYBACK_WAITING, () => {
-  //   isVideoLoading.value = true
-  // })
 })
 
 console.log(isMobile.value, 'mobile value')
@@ -727,17 +698,6 @@ video {
   position: relative;
 }
 
-.timeline::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  right: calc(100% - var(--preview-position) * 100%);
-  background-color: rgb(150, 150, 150);
-  display: none;
-}
-
 .timeline::after {
   content: '';
   position: absolute;
@@ -794,11 +754,6 @@ video {
   transform: translate(-50%, -50%);
 }
 
-.pause_play_icons {
-  opacity: 0;
-  transition: all 0.3s ease-in-out;
-}
-
 .pause_play_icons > button {
   background: none;
   border: none;
@@ -812,32 +767,10 @@ video {
   transition: opacity 150ms ease-in-out;
 }
 
-.pause_play_icons > span {
-  font-size: 4rem;
-  display: block;
-  color: white;
-  cursor: pointer;
-}
 .hide {
   display: none;
 }
 @media screen and (max-width: 900px) {
-  .pause_play_icons > span {
-    font-size: 1.5rem;
-  }
-
-  .pause_play_icons > .pause_icon {
-    gap: 1.2rem;
-  }
-
-  .pause_play_icons > .pause_icon {
-    display: flex;
-    gap: 4px;
-  }
-  .pause_play_icons > .pause_icon > span {
-    width: 8px;
-    height: 15px;
-  }
   .video_status_container > img {
     width: 12px;
     height: 15px;

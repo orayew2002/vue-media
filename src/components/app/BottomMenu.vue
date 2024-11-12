@@ -86,7 +86,8 @@ const onNavigate = (path: string) => {
 .bottom-menu {
   position: fixed;
   width: 100%;
-  padding: 1rem 1.5rem;
+  height: 50px;
+  padding-inline: 15px;
   background: linear-gradient(to bottom, rgba(0, 0, 0, 2), rgba(0, 0, 0, 0.9));
   display: flex;
   justify-content: space-between;
