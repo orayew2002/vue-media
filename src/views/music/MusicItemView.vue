@@ -35,26 +35,9 @@ const timeUpdateHandler = () => {
 
 // Timeline
 
-const handleTimeLineUpdate = (e: MouseEvent | TouchEvent) => {
-  const rect = timeline.value?.getBoundingClientRect()
-  if (!rect) return
-
-  // Get x position based on event type (mouse or touch)
-  const clientX = e instanceof MouseEvent ? e.clientX : e.touches?.[0]?.clientX
-  if (clientX === undefined) return
-
-  // Calculate percent based on x position
-  const percent =
-    Math.min(Math.max(0, clientX - rect.x), rect.width) / rect.width
-
-  if (isMobile.value) {
-    timeline.value?.style.setProperty('--progress-position', percent + '')
-  } else {
-    if (isScrubbing.value) {
-      e.preventDefault()
-      timeline.value?.style.setProperty('--progress-position', percent + '')
-    }
-  }
+const mouseDownHandler = (e: MouseEvent | TouchEvent) => {
+  isScrubbing.value = true
+  toggleScrubbing(e)
 }
 
 const toggleScrubbing = (e: MouseEvent | TouchEvent) => {
@@ -67,20 +50,28 @@ const toggleScrubbing = (e: MouseEvent | TouchEvent) => {
   const percent =
     Math.min(Math.max(0, clientX - rect.x), rect.width) / rect.width
 
-  isScrubbing.value = (e instanceof MouseEvent && e.buttons & 1) === 1
+  timeline.value?.style.setProperty('--progress-position', percent + '')
   if (audio_ref.value) {
-    console.log(percent * audio_ref.value?.duration, 'calc')
-    audio_ref.value.currentTime = percent * audio_ref.value?.duration
+    // audio_ref.value.currentTime = percent * audio_ref.value?.duration
+
+    requestAnimationFrame(() => {
+      if (audio_ref.value) {
+        audio_ref.value.currentTime = percent * audio_ref.value.duration
+      }
+    })
   }
-  handleTimeLineUpdate(e)
 }
 
-const documentMouseupHandler = (e: any) => {
-  if (isScrubbing.value) toggleScrubbing(e)
+const documentMouseupHandler = () => {
+  if (isScrubbing.value) {
+    isScrubbing.value = false
+  }
 }
 
 const documentMouseMoveHandler = (e: any) => {
-  if (isScrubbing.value) handleTimeLineUpdate(e)
+  if (isScrubbing.value) {
+    toggleScrubbing(e)
+  }
 }
 
 watch(
@@ -94,7 +85,9 @@ watch(
 )
 
 console.log(audio_ref.value?.currentTime, 'current timr audio')
-
+const loadedmetadataHandler = () => {
+  console.log('loaded metadata')
+}
 onMounted(() => {
   if (audio_ref.value) {
     audio_ref.value.addEventListener('loadedmetadata', () => {
@@ -103,14 +96,9 @@ onMounted(() => {
   }
   document.addEventListener('mouseup', documentMouseupHandler)
   document.addEventListener('mousemove', documentMouseMoveHandler)
-  // for mobile
-  document.addEventListener('touchstart', documentMouseupHandler)
-  document.addEventListener('touchmove', documentMouseMoveHandler)
 })
 
 onUnmounted(() => {
-  document.removeEventListener('touchstart', documentMouseupHandler)
-  document.removeEventListener('touchmove', documentMouseMoveHandler)
   document.removeEventListener('mouseup', documentMouseupHandler)
   document.removeEventListener('mousemove', documentMouseMoveHandler)
 })
@@ -127,6 +115,7 @@ onUnmounted(() => {
     <audio
       @playing="isPaused = false"
       @timeupdate="timeUpdateHandler"
+      @loadedmetadata="loadedmetadataHandler"
       preload="auto"
       ref="audio_ref"
       autoplay
@@ -138,8 +127,8 @@ onUnmounted(() => {
     </div>
     <div>
       <div
-        @mousemove="handleTimeLineUpdate"
-        @mousedown="toggleScrubbing"
+        @touchmove="toggleScrubbing"
+        @mousedown="mouseDownHandler"
         ref="timeline"
         class="timeline"
       ></div>
