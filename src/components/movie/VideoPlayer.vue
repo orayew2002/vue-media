@@ -27,9 +27,7 @@
       <div
         ref="timeline_container_ref"
         class="timeline-container"
-        @mousemove="handleTimeLineUpdate"
-        @mousedown="toggleScrubbing"
-        @touchstart="handleTimeLineUpdate"
+        @mousedown="timelineMouseDownHandler"
         @touchmove="toggleScrubbing"
       >
         <div class="timeline">
@@ -337,42 +335,14 @@ const playbackHandler = () => {
 
 // Timeline
 
-const handleTimeLineUpdate = (e: any) => {
-  console.log(e, 'handle time line')
-  const rect = timeline_container_ref.value?.getBoundingClientRect()
-  if (!rect) return
-
-  // Get x position based on event type (mouse or touch)
-  const clientX = e instanceof MouseEvent ? e.clientX : e.touches?.[0]?.clientX
-  if (clientX === undefined) return
-
-  // Calculate percent based on x position
-  const percent =
-    Math.min(Math.max(0, clientX - rect.x), rect.width) / rect.width
-
-  timeline_container_ref.value?.style.setProperty(
-    '--preview-position',
-    percent + '',
-  )
-
-  if (isMobile.value) {
-    timeline_container_ref.value?.style.setProperty(
-      '--progress-position',
-      percent + '',
-    )
-  } else {
-    if (isScrubbing.value) {
-      e.preventDefault()
-      timeline_container_ref.value?.style.setProperty(
-        '--progress-position',
-        percent + '',
-      )
-    }
-  }
+const timelineMouseDownHandler = (e: MouseEvent | TouchEvent) => {
+  isScrubbing.value = true
+  toggleScrubbing(e)
 }
 
 const toggleScrubbing = (e: MouseEvent | TouchEvent) => {
-  console.log('toggle scrubbing')
+  console.log('touch move')
+
   const rect = timeline_container_ref.value?.getBoundingClientRect()
   if (!rect) return
   // Get x position based on event type (mouse or touch)
@@ -383,30 +353,26 @@ const toggleScrubbing = (e: MouseEvent | TouchEvent) => {
   const percent =
     Math.min(Math.max(0, clientX - rect.x), rect.width) / rect.width
 
-  isScrubbing.value = (e instanceof MouseEvent && e.buttons & 1) === 1
-  if (isScrubbing.value) {
-    console.log('if video')
-    wasPaused = video_ref.value?.paused as boolean
-    video_ref.value?.pause()
-    console.log('in if', wasPaused, 'was paused')
-  } else {
-    console.log('else video')
-    if (video_ref.value) {
-      video_ref.value.currentTime = percent * video_ref.value?.duration
-    }
-    if (!wasPaused) video_ref.value?.play()
+  timeline_container_ref.value?.style.setProperty(
+    '--progress-position',
+    percent + '',
+  )
+
+  if (video_ref.value) {
+    video_ref.value.currentTime = percent * video_ref.value?.duration
   }
-  handleTimeLineUpdate(e)
 }
 
 const documentMouseupHandler = (e: any) => {
-  console.log('mouse up')
-  if (isScrubbing.value) toggleScrubbing(e)
+  if (isScrubbing.value) {
+    isScrubbing.value = false
+  }
 }
 
 const documentMouseMoveHandler = (e: any) => {
-  console.log('mouse move')
-  if (isScrubbing.value) handleTimeLineUpdate(e)
+  if (isScrubbing.value) {
+    toggleScrubbing(e)
+  }
 }
 
 const skipForwardHandler = () => {
@@ -450,11 +416,10 @@ watch(
         isVideoLoading.value = false
       })
 
-      player.on(dashjs.MediaPlayer.events.PLAYBACK_SEEKING, () => {
-        isVideoLoading.value = true
-      })
-
       player.on(dashjs.MediaPlayer.events.PLAYBACK_SEEKED, () => {
+        isVideoLoading.value = false
+      })
+      player.on(dashjs.MediaPlayer.events.PLAYBACK_PLAYING, () => {
         isVideoLoading.value = false
       })
 
@@ -474,9 +439,6 @@ onMounted(() => {
   document.addEventListener('fullscreenchange', fullScreenChangeHandler)
   document.addEventListener('mouseup', documentMouseupHandler)
   document.addEventListener('mousemove', documentMouseMoveHandler)
-  // for mobile
-  document.addEventListener('touchstart', documentMouseupHandler)
-  document.addEventListener('touchmove', documentMouseMoveHandler)
   video_ref.value?.addEventListener('enterpictureinpicture', () =>
     toggleMiniPlayerMode(true),
   )
@@ -485,12 +447,8 @@ onMounted(() => {
   )
 })
 
-console.log(isMobile.value, 'mobile value')
-
 onUnmounted(() => {
   document.removeEventListener('keydown', handleKeydown)
-  document.removeEventListener('touchstart', documentMouseupHandler)
-  document.removeEventListener('touchmove', documentMouseMoveHandler)
   document.removeEventListener('mouseup', documentMouseupHandler)
   document.removeEventListener('mousemove', documentMouseMoveHandler)
 })
