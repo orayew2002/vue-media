@@ -85,7 +85,7 @@ a {
 }
 
 a:hover {
-  color: var(--slate-100);
+  color: var(--link-hover);
 }
 
 @media screen and (max-width: 768px) {
@@ -117,10 +117,8 @@ a:hover {
 import { getMovieCategories } from '@/services/movies'
 import Locales from '@/components/app/Locales.vue'
 import CategoryMenu from '@/components/app/CategoryMenu.vue'
-import type { TLang } from '@/types/common'
 import type { TMovieCategory } from '@/types/movie'
 import { onMounted, onUnmounted, ref, watchEffect } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { RouterLink } from 'vue-router'
 import Search from './Search.vue'
 import BottomMenu from '@/components/app/BottomMenu.vue'
@@ -131,11 +129,6 @@ const { isMobile } = useIsMobile()
 const categories = ref<TMovieCategory[]>([])
 const menuIsOpened = ref(false)
 const menu = ref<HTMLDivElement>()
-const { locale } = useI18n()
-
-const openMenu = () => {
-  menuIsOpened.value = !menuIsOpened.value
-}
 
 const handleClickOutside = (event: any) => {
   if (menuIsOpened.value && menu.value && !menu.value.contains(event.target)) {

@@ -20,6 +20,7 @@
   --body-bg: #161e24;
   --movie-title: #838383;
   --bg-new: #18181a;
+  --link-hover: #36c0f2;
 }
 *,
 *::before,
@@ -44,7 +45,7 @@ html {
 
 .router-link-active {
   text-decoration: underline !important;
-  color: white !important;
+  color: var(--link-hover) !important;
 }
 
 .skeleton {

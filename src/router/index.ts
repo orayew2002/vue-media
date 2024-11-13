@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/home/HomeView.vue'
 import MovieView from '@/views/movie/MovieView.vue'
+import BookView from '@/views/book/index.vue'
+import LoginView from '@/views/login/index.vue'
 import MoviesByCategory from '@/views/movie/MoviesByCategory.vue'
 import SearchView from '@/views/search/SearchView.vue'
 import SearchMovie from '@/views/search/SearchMovie.vue'
@@ -27,6 +29,16 @@ const router = createRouter({
       ],
     },
     {
+      path: '/books',
+      name: 'books',
+      component: BookView,
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: LoginView,
+    },
+    {
       path: '/movies/:id',
       name: 'movie',
       component: MovieView,
@@ -49,6 +61,18 @@ const router = createRouter({
       ],
     },
   ],
+})
+
+router.beforeEach(async (to, from) => {
+  if (
+    // make sure the user is authenticated
+    !localStorage.getItem('token') &&
+    // ❗️ Avoid an infinite redirect
+    to.name !== 'login'
+  ) {
+    // redirect the user to the login page
+    return { name: 'login' }
+  }
 })
 
 export default router

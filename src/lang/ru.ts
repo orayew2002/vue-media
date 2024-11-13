@@ -5,4 +5,7 @@ export default {
   all: 'Все',
   similar_movies: 'Похожие фильмы',
   movie_not_found: 'Фильм не найден',
+  password: 'Пароль',
+  booking_number: 'Номер бронирования',
+  login: 'Войти',
 }

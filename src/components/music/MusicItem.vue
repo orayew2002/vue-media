@@ -9,7 +9,6 @@ const props = defineProps<{
 }>()
 const { isMobile } = useIsMobile()
 const route = useRoute()
-console.log(route.params.id, 'id')
 </script>
 <template>
   <div
