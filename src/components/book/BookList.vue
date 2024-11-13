@@ -8,6 +8,7 @@ const props = defineProps<{
 }>()
 
 const musicClickHandler = (path: string) => {
+  console.log(path, 'path')
   if (path) {
     window.open(`${import.meta.env.VITE_API_URL}${path}`, '_blank')
   }
@@ -16,7 +17,7 @@ const musicClickHandler = (path: string) => {
 <template>
   <div class="book_list">
     <BookItem
-      @music-click="musicClickHandler"
+      @book-click="musicClickHandler"
       v-for="book in props.books"
       :key="book.id"
       :book="book"

@@ -55,6 +55,29 @@ const onNavigate = (path: string) => {
           </defs>
         </svg>
       </li>
+      <li @click="onNavigate('/books')">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <g clip-path="url(#clip0_59_980)">
+            <path
+              d="M18 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V4C20 2.9 19.1 2 18 2ZM9 4H11V9L10 8.25L9 9V4ZM18 20H6V4H7V13L10 10.75L13 13V4H18V20Z"
+              :fill="
+                current_link.path !== '/books' ? 'var(--slate-400)' : 'white'
+              "
+            />
+          </g>
+          <defs>
+            <clipPath id="clip0_59_980">
+              <rect width="24" height="24" fill="white" />
+            </clipPath>
+          </defs>
+        </svg>
+      </li>
       <li @click="onNavigate('/search')">
         <svg
           width="24"

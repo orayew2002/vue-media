@@ -13,7 +13,7 @@ console.log(route.params.id, 'id')
 </script>
 <template>
   <div
-    @click="$emit('musicClick', book.id)"
+    @click="$emit('bookClick', book.path)"
     class="book_item"
     :class="{
       'bg-dark': book.id.toString() === $route.params.id,
