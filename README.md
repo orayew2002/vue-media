@@ -32,8 +32,10 @@ pnpm dev
 pnpm build
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+## Evironment Setup
+
+### env.local
 
 ```sh
-pnpm lint
+VITE_API_URL=
 ```
