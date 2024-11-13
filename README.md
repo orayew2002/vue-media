@@ -32,10 +32,10 @@ pnpm dev
 pnpm build
 ```
 
-## Evironment Setup
+## Environment Setup
 
-### env.local
+Create `.env` file in the root of the project and add the environment variable there.
 
 ```sh
-VITE_API_URL=
+VITE_API_URL=https://api.example.com
 ```
