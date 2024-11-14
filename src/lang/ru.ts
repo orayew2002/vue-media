@@ -8,4 +8,6 @@ export default {
   password: 'Пароль',
   booking_number: 'Номер бронирования',
   login: 'Войти',
+  hide: 'Скрыть',
+  show: 'Показать',
 }

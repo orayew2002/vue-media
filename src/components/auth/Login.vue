@@ -4,6 +4,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 const login = ref('')
 const password = ref('')
+const showPassword = ref(false)
 const router = useRouter()
 const submitHandler = async (e: Event) => {
   e.preventDefault()
@@ -26,7 +27,19 @@ const submitHandler = async (e: Event) => {
     </div>
     <div class="form-group">
       <label for="exampleInputPassword1">{{ $t('password') }}</label>
-      <input v-model="password" type="text" id="text" />
+      <input
+        v-model="password"
+        :type="showPassword ? 'text' : 'password'"
+        id="text"
+      />
+      <div
+        @click="showPassword = !showPassword"
+        class="show_password_container"
+      >
+        <div class="show_password">
+          {{ showPassword ? $t('hide') : $t('show') }}
+        </div>
+      </div>
     </div>
     <div class="form-group">
       <button type="submit">Içeri giriň</button>
@@ -44,6 +57,7 @@ form {
   padding-inline: 20px;
 }
 .form-group {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: start;
@@ -75,9 +89,28 @@ form {
   color: var(--slate-950);
 }
 
+.show_password_container {
+  position: absolute;
+  cursor: pointer;
+  color: var(--link-hover);
+  right: 0;
+  bottom: 2px;
+  background-color: aquamarine;
+  height: 50%;
+  background-color: var(--slate-800);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 4;
+}
+
+.show_password_container > .show_password {
+  padding-right: 3px;
+}
+
 @media screen and (min-width: 900px) {
   form {
-    width: 300px;
+    width: 340px;
   }
 }
 </style>

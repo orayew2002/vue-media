@@ -8,4 +8,6 @@ export default {
   password: 'Parol',
   booking_number: 'Bron nomer',
   login: 'Içeri giriň',
+  hide: 'Buk',
+  show: 'Görkez',
 }
