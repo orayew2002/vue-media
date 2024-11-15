@@ -663,7 +663,7 @@ video {
   top: 0;
   bottom: 0;
   right: calc(100% - var(--progress-position) * 100%);
-  background-color: red;
+  background-color: var(--link-hover);
 }
 
 .buffered {
@@ -683,7 +683,7 @@ video {
   height: 200%;
   top: -50%;
   left: calc(var(--progress-position) * 100%);
-  background-color: red;
+  background-color: var(--link-hover);
   border-radius: 50%;
   transition: transform 150ms ease-in-out;
   aspect-ratio: 1 / 1;

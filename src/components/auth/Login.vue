@@ -15,7 +15,7 @@ const submitHandler = async (e: Event) => {
       router.push('/')
     }
   } catch (err) {
-    alert('Error')
+    alert('Girizem maglumatlaryňyz Nädogry !!!')
   }
 }
 </script>
@@ -97,7 +97,7 @@ form {
   bottom: 2px;
   background-color: aquamarine;
   height: 50%;
-  background-color: var(--slate-800);
+  background-color: transparent;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -106,6 +106,10 @@ form {
 
 .show_password_container > .show_password {
   padding-right: 3px;
+}
+
+input:-webkit-autofill {
+  background-color: var(--slate-800) !important;
 }
 
 @media screen and (min-width: 900px) {

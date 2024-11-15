@@ -1,11 +1,6 @@
-import type { AxiosInstance } from 'axios'
+import type { AxiosError, AxiosInstance } from 'axios'
 import baseAxios from 'axios'
-
-// eslint-disable-next-line import/no-cycle
-// import { refreshToken } from '@/services/auth';
-// import store from '@/store';
-// import { setAuth } from '@/store/auth/authSlice';
-
+import router from '@/router'
 const baseURL = import.meta.env.VITE_API_URL?.toString()
 // eslint-disable-next-line consistent-return
 // const refrshAccessToken = async () => {
@@ -27,7 +22,7 @@ export const getAxios = (): AxiosInstance => {
     (config: { headers: any; params?: any }) => {
       if (!config.headers.Authorization) {
         // TODO get token from store
-        config.headers.Authorization = `Bearer ${localStorage.getItem('access_token_mh')}`
+        config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`
       }
       return config
     },
@@ -35,19 +30,12 @@ export const getAxios = (): AxiosInstance => {
 
   instance.interceptors.response.use(
     response => response,
-    // async (error: AxiosError) => {
-    // 	if (error.response?.status === 403) {
-    // 		// TODO update token from store
-    // 		const accessToken = await refrshAccessToken();
-    // 		localStorage.setItem('access_token_mh', accessToken as string);
-    // 		baseAxios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-    // 	}
-    // 	if (error.response?.status === 401) {
-    // 		localStorage.removeItem('access_token_mh');
-    // 		localStorage.removeItem('refresh_token_mh');
-    // 	}
-    // 	return Promise.reject(error);
-    // }
+    async (error: AxiosError) => {
+      if (error.response?.status === 403 || error.response?.status === 401) {
+        router.push('/login')
+      }
+      return Promise.reject(error)
+    },
   )
 
   return instance

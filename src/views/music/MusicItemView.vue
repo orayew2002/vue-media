@@ -1,18 +1,20 @@
 <script setup lang="ts">
 import { useIsMobile } from '@/composables/useIsMobile'
+import { useMusicStore } from '@/store/music'
 import formatDuration from '@/utils/formatDuration'
-import { onMounted, onUnmounted, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { onMounted, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+const store = useMusicStore()
 const audio_ref = ref<HTMLAudioElement | null>(null)
 const timeline = ref<HTMLDivElement>()
 const URL = ref('')
 const isPaused = ref(true)
-const isScrubbing = ref(false)
 const route = useRoute()
+const router = useRouter()
 const currentTimeOfAudio = ref('0:00')
-console.log(currentTimeOfAudio.value, 'current time')
 const totalAudioDuration = ref('')
 const { isMobile } = useIsMobile()
+
 const onTogglePlayPause = () => {
   if (audio_ref.value?.paused) {
     audio_ref.value?.play()
@@ -33,44 +35,33 @@ const timeUpdateHandler = () => {
   }
 }
 
-// Timeline
-
-const mouseDownHandler = (e: MouseEvent | TouchEvent) => {
-  isScrubbing.value = true
-  toggleScrubbing(e)
-}
-
-const toggleScrubbing = (e: MouseEvent | TouchEvent) => {
-  const rect = timeline.value?.getBoundingClientRect()
-  if (!rect) return
-
-  const clientX = e instanceof MouseEvent ? e.clientX : e.touches?.[0]?.clientX
-  if (clientX === undefined) return
-
-  const percent =
-    Math.min(Math.max(0, clientX - rect.x), rect.width) / rect.width
-
-  timeline.value?.style.setProperty('--progress-position', percent + '')
-  if (audio_ref.value) {
-    // audio_ref.value.currentTime = percent * audio_ref.value?.duration
-
-    requestAnimationFrame(() => {
-      if (audio_ref.value) {
-        audio_ref.value.currentTime = percent * audio_ref.value.duration
-      }
-    })
+const prevHandler = () => {
+  const findIndex =
+    store.music?.musics.findIndex(
+      item => item.id.toString() === route.params.id,
+    ) || 1
+  if (store.music?.musics.length) {
+    const prevIndex =
+      findIndex === 0 ? store.music?.musics.length - 1 : findIndex - 1
+    const prevMusic = store.music?.musics[prevIndex]
+    console.log(prevMusic, 'prev music')
+    if (prevMusic.path) {
+      router.push({ name: 'music-id', params: { id: prevMusic.id } })
+    }
   }
 }
-
-const documentMouseupHandler = () => {
-  if (isScrubbing.value) {
-    isScrubbing.value = false
-  }
-}
-
-const documentMouseMoveHandler = (e: any) => {
-  if (isScrubbing.value) {
-    toggleScrubbing(e)
+const nextHandler = () => {
+  const findIndex =
+    store.music?.musics.findIndex(
+      item => item.id.toString() === route.params.id,
+    ) || 0
+  if (store.music?.musics.length) {
+    const nextIndex =
+      findIndex === store.music?.musics.length - 1 ? 0 : findIndex + 1
+    const nextMusic = store.music?.musics[nextIndex]
+    if (nextMusic.path) {
+      router.push({ name: 'music-id', params: { id: nextMusic.id } })
+    }
   }
 }
 
@@ -84,23 +75,13 @@ watch(
   { immediate: true },
 )
 
-console.log(audio_ref.value?.currentTime, 'current timr audio')
-const loadedmetadataHandler = () => {
-  console.log('loaded metadata')
-}
 onMounted(() => {
   if (audio_ref.value) {
+    console.log(store.music?.musics, 'muisic')
     audio_ref.value.addEventListener('loadedmetadata', () => {
       totalAudioDuration.value = formatDuration(audio_ref.value?.duration)
     })
   }
-  document.addEventListener('mouseup', documentMouseupHandler)
-  document.addEventListener('mousemove', documentMouseMoveHandler)
-})
-
-onUnmounted(() => {
-  document.removeEventListener('mouseup', documentMouseupHandler)
-  document.removeEventListener('mousemove', documentMouseMoveHandler)
 })
 </script>
 
@@ -115,7 +96,6 @@ onUnmounted(() => {
     <audio
       @playing="isPaused = false"
       @timeupdate="timeUpdateHandler"
-      @loadedmetadata="loadedmetadataHandler"
       preload="auto"
       ref="audio_ref"
       autoplay
@@ -126,14 +106,23 @@ onUnmounted(() => {
       <div class="total-time">{{ totalAudioDuration }}</div>
     </div>
     <div>
-      <div
-        @touchmove="toggleScrubbing"
-        @mousedown="mouseDownHandler"
-        ref="timeline"
-        class="timeline"
-      ></div>
+      <div ref="timeline" class="timeline"></div>
     </div>
     <div class="controls">
+      <button class="action_btn prev" @click="prevHandler">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M15.5 15.5L4.875 8L15.5 0.5V15.5ZM3 0.5V15.5H0.5V0.5H3Z"
+            fill="white"
+          />
+        </svg>
+      </button>
       <div class="pause_play_icons">
         <button @click="onTogglePlayPause">
           <svg class="pause-icon" viewBox="0 0 24 24">
@@ -145,6 +134,20 @@ onUnmounted(() => {
           </svg>
         </button>
       </div>
+      <button class="action_btn next" @click="nextHandler">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0.5 15.5L11.125 8L0.5 0.5V15.5ZM13 0.5V15.5H15.5V0.5H13Z"
+            fill="white"
+          />
+        </svg>
+      </button>
     </div>
   </div>
 </template>
@@ -154,7 +157,7 @@ onUnmounted(() => {
   left: 0;
   bottom: 50px;
   width: 100%;
-  height: 50px;
+  height: 60px;
   color: white;
   background-color: var(--slate-800);
 }
@@ -185,7 +188,7 @@ onUnmounted(() => {
   top: 0;
   bottom: 0;
   right: calc(100% - var(--progress-position) * 100%);
-  background-color: red;
+  background-color: var(--link-hover);
 }
 
 .controls {
@@ -194,16 +197,49 @@ onUnmounted(() => {
   height: 100%;
   align-items: center;
   width: 100%;
+  gap: 1rem;
+  padding-bottom: 5px;
 }
-
-.pause_play_icons > button {
-  background: var(--slate-200);
-  border-radius: 50%;
+.controls > .action_btn {
   border: none;
   color: inherit;
   padding: 0;
-  height: 40px;
-  width: 40px;
+  bottom: 2px;
+  width: 50px;
+  height: 50px;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+/* .controls > .prev {
+  left: 40%;
+}
+
+.controls > .next {
+  right: 40%;
+} */
+
+.pause_play_icons {
+  width: 50px;
+  height: 50px;
+  left: 50%;
+  bottom: 2px;
+  display: flex;
+  align-items: center;
+  border-radius: 50%;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--slate-200);
+}
+
+.pause_play_icons > button {
+  border: none;
+  color: inherit;
+  border-radius: 50%;
+  background: var(--slate-200);
+  padding: 0;
+  width: 70%;
+  height: 70%;
   font-size: 1.1rem;
   cursor: pointer;
   opacity: 0.85;

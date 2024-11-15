@@ -44,7 +44,7 @@ const route = useRoute()
   position: relative;
   display: flex;
   width: 100%;
-  padding: 10px;
+  padding: 5px;
   align-items: center;
   background-color: transparent;
   gap: 1rem;
@@ -69,21 +69,42 @@ const route = useRoute()
   top: 5px;
   left: 5px;
   background-color: var(--slate-600);
-  width: 40px;
-  height: 40px;
+  width: 25px;
+  height: 25px;
   border-radius: 5px;
 }
 .music_item > svg {
   position: relative;
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
+  padding-top: 4px;
 }
 
 .music_item > p {
   color: var(--slate-300);
+  font-size: 10px;
 }
 
 svg {
   fill: var(--slate-400);
+}
+
+@media screen and (min-width: 900px) {
+  .music_item::before {
+    width: 40px;
+    height: 40px;
+  }
+  .music_item > svg {
+    width: 30px;
+    height: 30px;
+    padding-top: 0px;
+  }
+  .music_item {
+    padding: 10px;
+  }
+
+  .music_item > p {
+    font-size: 14px;
+  }
 }
 </style>
