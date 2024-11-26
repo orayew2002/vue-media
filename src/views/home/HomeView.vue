@@ -16,8 +16,8 @@ onMounted(() => {
   <AppLoading v-if="movieStore.loading" />
   <div v-else>
     <MovieScreen
-      v-if="movieStore.moviesHomePage[0]?.movies[0].id"
-      :movie="movieStore.moviesHomePage[0]?.movies[0]"
+      v-if="movieStore.moviesHomePage[1]?.movies[0].id"
+      :movie="movieStore.moviesHomePage[1]?.movies[0]"
     />
     <div class="movie-list-home">
       <MovieList

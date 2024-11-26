@@ -183,7 +183,7 @@ const handlePlayPause = (val: boolean) => {
 }
 
 const togglePlay = () => {
-  if (isMobile) {
+  if (isMobile.value) {
     showControls.value = !showControls.value
   }
   if (video_ref.value && !isMobile.value) {
@@ -403,6 +403,20 @@ watch(
     await nextTick()
     if (newId) {
       player = dashjs.MediaPlayer().create()
+      player.extend('RequestModifier', () => {
+        return {
+          modifyRequestHeader: (xhr: {
+            setRequestHeader: (arg0: string, arg1: string) => void
+          }) => {
+            xhr.setRequestHeader(
+              'Authorization',
+              `Bearer ${localStorage.getItem('token')}`,
+            )
+
+            return xhr
+          },
+        }
+      })
       player.initialize(
         video_ref.value,
         `${import.meta.env.VITE_API_URL}/movies/video/${newId}`,
@@ -534,9 +548,12 @@ video {
 .pause_play_icons {
   padding: 0;
   margin: 0;
+  opacity: 0;
 }
 
-.video-container:hover .pause_play_icons {
+.video-container:hover .pause_play_icons,
+.video-container:focus-within .pause_play_icons,
+.video-container.paused .pause_play_icons {
   opacity: 1;
 }
 
