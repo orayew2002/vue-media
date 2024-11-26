@@ -7,7 +7,7 @@
       v-for="locale in locales"
       :key="locale.name"
       @click="changeLocale(locale.name)"
-      >{{ locale.label }}</span
+      >{{ locale.name.toUpperCase() }}</span
     >
   </div>
 </template>
@@ -21,8 +21,9 @@
 
 .locales > span {
   display: block;
-  font-size: 1.4rem;
+  font-size: 1rem;
   cursor: pointer;
+  color: white;
 }
 
 .underline_lang {
@@ -31,7 +32,7 @@
 
 @media screen and (min-width: 1430px) {
   .locales > span {
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
 }
 </style>

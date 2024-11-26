@@ -139,7 +139,7 @@ const { isMobile } = useIsMobile()
 
 @media (min-width: 768px) and (max-width: 1440px) {
   .movie_item {
-    width: 260px;
+    width: 100%;
     height: 300px;
   }
   .movie_title {
@@ -151,6 +151,10 @@ const { isMobile } = useIsMobile()
 }
 
 @media (min-width: 1440px) {
+  .movie_item {
+    width: 100%;
+    height: 300px;
+  }
   .movie_title {
     font-size: large;
   }

@@ -1,5 +1,6 @@
 export default {
   movies: 'фильмы',
+  books: 'книги',
   play: 'играть',
   music: 'музыка',
   all: 'Все',

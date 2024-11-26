@@ -1,5 +1,6 @@
 export default {
   movies: 'filmler',
+  books: 'kitaplar',
   play: 'Başlat',
   music: 'Aýdymlar',
   all: 'Hemmesi',
