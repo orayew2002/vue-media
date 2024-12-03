@@ -5,6 +5,7 @@ export type TMovie = {
   duration: number
   id: number
   image: string
+  path: string
   sub_categories: TCommon[]
   title: TLang
 }

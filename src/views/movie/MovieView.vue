@@ -48,7 +48,11 @@ onMounted(() => {
   <AppLoading v-if="loading" />
   <div class="movie_view_container" v-else>
     <div>
-      <VideoPlayer v-if="$route.params.id" :id="$route.params.id as string" />
+      <VideoPlayer
+        :path="movie?.path"
+        v-if="$route.params.id"
+        :id="$route.params.id as string"
+      />
       <div class="movie_title_container">
         <h2>{{ movie?.title[$i18n.locale as keyof TLang] }}</h2>
         <span class="sub_cat_title"
