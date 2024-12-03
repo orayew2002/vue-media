@@ -20,20 +20,22 @@ const route = useRoute()
     }"
   >
     <svg
-      version="1.1"
-      id="Capa_1"
+      width="145px"
+      height="145px"
+      viewBox="0 0 16.00 16.00"
+      fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      xmlns:xlink="http://www.w3.org/1999/xlink"
-      viewBox="0 0 20.311 20.311"
-      xml:space="preserve"
     >
-      <g>
+      <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+      <g
+        id="SVGRepo_tracerCarrier"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      ></g>
+      <g id="SVGRepo_iconCarrier">
         <path
-          d="M17.815,16.47c0-0.003,0-0.007,0-0.01V4.879L8.438,0v10.523C7.15,9.499,5.18,9.6,3.8,10.842
-      c-1.521,1.37-1.745,3.604-0.499,4.989c1.247,1.385,3.492,1.398,5.012,0.028c0.859-0.771,1.303-1.817,1.306-2.831V4.372l6.977,3.28
-      v6.273c-1.286-0.991-3.232-0.879-4.6,0.35c-1.523,1.37-1.744,3.603-0.498,4.987c1.246,1.387,3.491,1.399,5.014,0.03
-      c0.851-0.768,1.297-1.809,1.303-2.818l0,0V16.47z"
-        />
+          d="M15 1H4V9H3C1.34315 9 0 10.3431 0 12C0 13.6569 1.34315 15 3 15C4.65685 15 6 13.6569 6 12V5H13V9H12C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15C13.6569 15 15 13.6569 15 12V1Z"
+        ></path>
       </g>
     </svg>
     <p>{{ music.title[$i18n.locale as keyof TLang] }}</p>
@@ -62,22 +64,12 @@ const route = useRoute()
   background-color: var(--slate-900);
   cursor: pointer;
 }
-
-.music_item::before {
-  content: '';
-  position: absolute;
-  top: 5px;
-  left: 5px;
-  background-color: var(--slate-600);
-  width: 25px;
-  height: 25px;
-  border-radius: 5px;
-}
 .music_item > svg {
   position: relative;
   width: 20px;
   height: 20px;
-  padding-top: 4px;
+  padding: 5px;
+  background-color: var(--slate-600);
 }
 
 .music_item > p {

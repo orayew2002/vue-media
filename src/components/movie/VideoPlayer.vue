@@ -12,13 +12,22 @@
     }"
   >
     <video
-      @playing="() => (isPaused = false)"
+      @playing="
+        () => {
+          isPaused = false
+          isVideoLoading = false
+        }
+      "
       @pause="() => handlePlayPause(true)"
       @play="() => handlePlayPause(false)"
       @click="togglePlay"
       @volumechange="volumeChangeHandler"
       @timeupdate="timeUpdateHandler"
       @dblclick="toggleFullScreen"
+      @loadeddata="isVideoLoading = false"
+      @loadedmetadata="onLoadMetadata"
+      @stalled="onStalled"
+      :src="pathUrl"
       ref="video_ref"
     ></video>
     <div @dblclick="skipForwardHandler" class="skipForward" />
@@ -147,14 +156,14 @@
   </div>
 </template>
 <script setup lang="ts">
-import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
-import dashjs from 'dashjs'
+import { onMounted, onUnmounted, ref, watch, watchEffect } from 'vue'
 import formatDuration from '@/utils/formatDuration'
 import { useIsMobile } from '@/composables/useIsMobile'
 
 const { isMobile } = useIsMobile()
-let player: any = null
+// let player: any = null
 const isPaused = ref(true)
+const pathUrl = ref('')
 const isVideoLoading = ref(true)
 const video_ref = ref<HTMLVideoElement | null>(null)
 const video_container_ref = ref<HTMLDivElement | null>(null)
@@ -175,11 +184,24 @@ const props = defineProps({
   id: {
     type: String,
   },
+  path: {
+    type: String,
+  },
 })
 
 let wasPaused: boolean
 const handlePlayPause = (val: boolean) => {
   isPaused.value = val
+}
+
+const onLoadMetadata = () => {
+  isVideoLoading.value = false
+  console.log(formatDuration(video_ref.value?.duration), 'duration')
+  totalVideoDuration.value = formatDuration(video_ref.value?.duration)
+}
+
+const onStalled = () => {
+  console.log('stalled')
 }
 
 const togglePlay = () => {
@@ -359,7 +381,9 @@ const toggleScrubbing = (e: MouseEvent | TouchEvent) => {
   )
 
   if (video_ref.value) {
+    video_ref.value.pause()
     video_ref.value.currentTime = percent * video_ref.value?.duration
+    video_ref.value.play()
   }
 }
 
@@ -397,56 +421,60 @@ const onTogglePlayPuse = () => {
   }
 }
 
-watch(
-  () => props.id,
-  async newId => {
-    await nextTick()
-    if (newId) {
-      player = dashjs.MediaPlayer().create()
-      player.extend('RequestModifier', () => {
-        return {
-          modifyRequestHeader: (xhr: {
-            setRequestHeader: (arg0: string, arg1: string) => void
-          }) => {
-            xhr.setRequestHeader(
-              'Authorization',
-              `Bearer ${localStorage.getItem('token')}`,
-            )
+watchEffect(() => {
+  pathUrl.value = import.meta.env.VITE_API_URL + props.path
+  console.log(props.path, 'path')
+})
+// watch(
+//   () => props.id,
+//   async newId => {
+//     await nextTick()
+//     if (newId) {
+//       player = dashjs.MediaPlayer().create()
+//       player.extend('RequestModifier', () => {
+//         return {
+//           modifyRequestHeader: (xhr: {
+//             setRequestHeader: (arg0: string, arg1: string) => void
+//           }) => {
+//             xhr.setRequestHeader(
+//               'Authorization',
+//               `Bearer ${localStorage.getItem('token')}`,
+//             )
 
-            return xhr
-          },
-        }
-      })
-      player.initialize(
-        video_ref.value,
-        `${import.meta.env.VITE_API_URL}/movies/video/${newId}`,
-        true,
-      )
-      // Set up event listener for playback metadata
-      player.on(dashjs.MediaPlayer.events.PLAYBACK_METADATA_LOADED, () => {
-        totalVideoDuration.value = formatDuration(player.duration())
-      })
-      player.on(dashjs.MediaPlayer.events.PLAYBACK_LOADED_DATA, () => {
-        isVideoLoading.value = false
-      })
+//             return xhr
+//           },
+//         }
+//       })
+//       player.initialize(
+//         video_ref.value,
+//         `${import.meta.env.VITE_API_URL}/movies/video/${newId}`,
+//         true,
+//       )
+//       // Set up event listener for playback metadata
+//       player.on(dashjs.MediaPlayer.events.PLAYBACK_METADATA_LOADED, () => {
+//         totalVideoDuration.value = formatDuration(player.duration())
+//       })
+//       player.on(dashjs.MediaPlayer.events.PLAYBACK_LOADED_DATA, () => {
+//         isVideoLoading.value = false
+//       })
 
-      player.on(dashjs.MediaPlayer.events.PLAYBACK_SEEKED, () => {
-        isVideoLoading.value = false
-      })
-      player.on(dashjs.MediaPlayer.events.PLAYBACK_PLAYING, () => {
-        isVideoLoading.value = false
-      })
+//       player.on(dashjs.MediaPlayer.events.PLAYBACK_SEEKED, () => {
+//         isVideoLoading.value = false
+//       })
+//       player.on(dashjs.MediaPlayer.events.PLAYBACK_PLAYING, () => {
+//         isVideoLoading.value = false
+//       })
 
-      player.on(dashjs.MediaPlayer.events.PLAYBACK_STALLED, () => {
-        isVideoLoading.value = true
-      })
-      player.on(dashjs.MediaPlayer.events.PLAYBACK_WAITING, () => {
-        isVideoLoading.value = true
-      })
-    }
-  },
-  { immediate: true },
-)
+//       player.on(dashjs.MediaPlayer.events.PLAYBACK_STALLED, () => {
+//         isVideoLoading.value = true
+//       })
+//       player.on(dashjs.MediaPlayer.events.PLAYBACK_WAITING, () => {
+//         isVideoLoading.value = true
+//       })
+//     }
+//   },
+//   { immediate: true },
+// )
 
 onMounted(() => {
   document.addEventListener('keydown', handleKeydown)

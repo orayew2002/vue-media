@@ -44,6 +44,7 @@ onUnmounted(() => {
     observer = null
   }
 })
+console.log(store.music, 'music')
 </script>
 <template>
   <AppLoading v-if="store.loading" />
