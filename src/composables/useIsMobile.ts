@@ -1,6 +1,6 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 
-export function useIsMobile(breakpoint = 900) {
+export function useIsMobile(breakpoint = 1200) {
   const isMobile = ref(window.innerWidth <= breakpoint)
 
   const updateIsMobile = () => {

@@ -2,6 +2,7 @@
   <div
     ref="video_container_ref"
     class="video-container"
+    @click="controlsHandler"
     :class="{
       paused: isPaused,
       theater: isTheaterMode,
@@ -20,19 +21,19 @@
       "
       @pause="() => handlePlayPause(true)"
       @play="() => handlePlayPause(false)"
-      @click="togglePlay"
       @volumechange="volumeChangeHandler"
       @timeupdate="timeUpdateHandler"
       @dblclick="toggleFullScreen"
       @loadeddata="isVideoLoading = false"
       @loadedmetadata="onLoadMetadata"
-      @stalled="onStalled"
-      :src="pathUrl"
       ref="video_ref"
     ></video>
     <div @dblclick="skipForwardHandler" class="skipForward" />
     <div @dblclick="skipBackwardHandler" class="skipBackward" />
-    <div class="video_contorls_container" :class="showControls ? 'hide' : ''">
+    <div
+      class="video_contorls_container"
+      :class="showControls && !isPaused ? 'hide' : 'show'"
+    >
       <div
         ref="timeline_container_ref"
         class="timeline-container"
@@ -137,7 +138,10 @@
         </button>
       </div>
     </div>
-    <div class="video_status_container" :class="showControls ? 'hide' : ''">
+    <div
+      class="video_status_container"
+      :class="showControls && !isPaused ? 'hide' : ''"
+    >
       <div v-if="isVideoLoading">
         <img src="/bars-scale-middle.svg" alt="" />
       </div>
@@ -156,14 +160,13 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch, watchEffect } from 'vue'
+import { onMounted, onUnmounted, ref, watch, watchEffect, nextTick } from 'vue'
 import formatDuration from '@/utils/formatDuration'
 import { useIsMobile } from '@/composables/useIsMobile'
-
+import dashjs from 'dashjs'
 const { isMobile } = useIsMobile()
-// let player: any = null
+let player: any = null
 const isPaused = ref(true)
-const pathUrl = ref('')
 const isVideoLoading = ref(true)
 const video_ref = ref<HTMLVideoElement | null>(null)
 const video_container_ref = ref<HTMLDivElement | null>(null)
@@ -189,7 +192,9 @@ const props = defineProps({
   },
 })
 
-let wasPaused: boolean
+const controlsHandler = () => {
+  showControls.value = !showControls.value
+}
 const handlePlayPause = (val: boolean) => {
   isPaused.value = val
 }
@@ -198,10 +203,6 @@ const onLoadMetadata = () => {
   isVideoLoading.value = false
   console.log(formatDuration(video_ref.value?.duration), 'duration')
   totalVideoDuration.value = formatDuration(video_ref.value?.duration)
-}
-
-const onStalled = () => {
-  console.log('stalled')
 }
 
 const togglePlay = () => {
@@ -421,60 +422,60 @@ const onTogglePlayPuse = () => {
   }
 }
 
-watchEffect(() => {
-  pathUrl.value = import.meta.env.VITE_API_URL + props.path
-  console.log(props.path, 'path')
-})
-// watch(
-//   () => props.id,
-//   async newId => {
-//     await nextTick()
-//     if (newId) {
-//       player = dashjs.MediaPlayer().create()
-//       player.extend('RequestModifier', () => {
-//         return {
-//           modifyRequestHeader: (xhr: {
-//             setRequestHeader: (arg0: string, arg1: string) => void
-//           }) => {
-//             xhr.setRequestHeader(
-//               'Authorization',
-//               `Bearer ${localStorage.getItem('token')}`,
-//             )
+// watchEffect(() => {
+//   pathUrl.value = import.meta.env.VITE_API_URL + props.path
+//   console.log(props.path, 'path')
+// })
+watch(
+  () => props.id,
+  async newId => {
+    await nextTick()
+    if (newId) {
+      player = dashjs.MediaPlayer().create()
+      player.extend('RequestModifier', () => {
+        return {
+          modifyRequestHeader: (xhr: {
+            setRequestHeader: (arg0: string, arg1: string) => void
+          }) => {
+            xhr.setRequestHeader(
+              'Authorization',
+              `Bearer ${localStorage.getItem('token')}`,
+            )
 
-//             return xhr
-//           },
-//         }
-//       })
-//       player.initialize(
-//         video_ref.value,
-//         `${import.meta.env.VITE_API_URL}/movies/video/${newId}`,
-//         true,
-//       )
-//       // Set up event listener for playback metadata
-//       player.on(dashjs.MediaPlayer.events.PLAYBACK_METADATA_LOADED, () => {
-//         totalVideoDuration.value = formatDuration(player.duration())
-//       })
-//       player.on(dashjs.MediaPlayer.events.PLAYBACK_LOADED_DATA, () => {
-//         isVideoLoading.value = false
-//       })
+            return xhr
+          },
+        }
+      })
+      player.initialize(
+        video_ref.value,
+        `${import.meta.env.VITE_API_URL}/movies/video/${newId}`,
+        true,
+      )
+      // Set up event listener for playback metadata
+      player.on(dashjs.MediaPlayer.events.PLAYBACK_METADATA_LOADED, () => {
+        totalVideoDuration.value = formatDuration(player.duration())
+      })
+      player.on(dashjs.MediaPlayer.events.PLAYBACK_LOADED_DATA, () => {
+        isVideoLoading.value = false
+      })
 
-//       player.on(dashjs.MediaPlayer.events.PLAYBACK_SEEKED, () => {
-//         isVideoLoading.value = false
-//       })
-//       player.on(dashjs.MediaPlayer.events.PLAYBACK_PLAYING, () => {
-//         isVideoLoading.value = false
-//       })
+      player.on(dashjs.MediaPlayer.events.PLAYBACK_SEEKED, () => {
+        isVideoLoading.value = false
+      })
+      player.on(dashjs.MediaPlayer.events.PLAYBACK_PLAYING, () => {
+        isVideoLoading.value = false
+      })
 
-//       player.on(dashjs.MediaPlayer.events.PLAYBACK_STALLED, () => {
-//         isVideoLoading.value = true
-//       })
-//       player.on(dashjs.MediaPlayer.events.PLAYBACK_WAITING, () => {
-//         isVideoLoading.value = true
-//       })
-//     }
-//   },
-//   { immediate: true },
-// )
+      player.on(dashjs.MediaPlayer.events.PLAYBACK_STALLED, () => {
+        isVideoLoading.value = true
+      })
+      player.on(dashjs.MediaPlayer.events.PLAYBACK_WAITING, () => {
+        isVideoLoading.value = true
+      })
+    }
+  },
+  { immediate: true },
+)
 
 onMounted(() => {
   document.addEventListener('keydown', handleKeydown)
@@ -762,8 +763,8 @@ video {
   border: none;
   color: inherit;
   padding: 0;
-  height: 30px;
-  width: 30px;
+  height: 60px;
+  width: 60px;
   font-size: 1.1rem;
   cursor: pointer;
   opacity: 0.85;
@@ -773,7 +774,11 @@ video {
 .hide {
   display: none;
 }
-@media screen and (max-width: 900px) {
+
+.show {
+  opacity: 1;
+}
+@media screen and (max-width: 1200px) {
   .video_status_container > img {
     width: 12px;
     height: 15px;
