@@ -24,7 +24,6 @@ const createObserver = () => {
     entries.forEach(entry => {
       if (entry.isIntersecting && store.hasMore && !store.loadingForPaginated) {
         store.fetchMoviesByIdWithPagination(props.id as string)
-        console.log('in intersection')
       }
     })
   }, options)

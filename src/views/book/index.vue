@@ -17,7 +17,6 @@ const createObserver = () => {
     entries.forEach(entry => {
       if (entry.isIntersecting && store.hasMore && !store.loading) {
         store.getBooksFn()
-        console.log('in intersection')
       }
     })
   }, options)

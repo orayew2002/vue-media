@@ -61,6 +61,9 @@ onMounted(() => {
             movie?.sub_categories[0].title[$i18n.locale as keyof TLang]
           }}</span
         >
+        <span class="description">{{
+          movie?.description[$i18n.locale as keyof TLang]
+        }}</span>
       </div>
     </div>
     <MoviesBySubCatId
@@ -83,6 +86,11 @@ onMounted(() => {
 h2 {
   color: white;
   padding-top: 1rem;
+}
+
+.description {
+  display: block;
+  color: var(--slate-300);
 }
 
 .sub_cat_title {

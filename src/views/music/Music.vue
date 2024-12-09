@@ -17,7 +17,6 @@ const createObserver = () => {
     entries.forEach(entry => {
       if (entry.isIntersecting && store.hasMore && !store.loading) {
         store.getMusic()
-        console.log('in intersection')
       }
     })
   }, options)
@@ -44,7 +43,6 @@ onUnmounted(() => {
     observer = null
   }
 })
-console.log(store.music, 'music')
 </script>
 <template>
   <AppLoading v-if="store.loading" />

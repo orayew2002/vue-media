@@ -14,7 +14,6 @@ export const useBookStore = defineStore('book', () => {
     loading.value = true
     try {
       const res = await getBooks(page.value, count)
-      console.log(res, 'response')
       if (page.value === 1) {
         books.value = res.data
         if (res.data.total > page.value * count) {

@@ -90,7 +90,6 @@ const prevHandler = () => {
     const prevIndex =
       findIndex === 0 ? store.music?.musics.length - 1 : findIndex - 1
     const prevMusic = store.music?.musics[prevIndex]
-    console.log(prevMusic, 'prev music')
     if (prevMusic.path) {
       router.push({ name: 'music-id', params: { id: prevMusic.id } })
     }
@@ -123,7 +122,6 @@ watch(
 
 onMounted(() => {
   if (audio_ref.value) {
-    console.log(store.music?.musics, 'muisic')
     audio_ref.value.addEventListener('loadedmetadata', () => {
       totalAudioDuration.value = formatDuration(audio_ref.value?.duration)
     })

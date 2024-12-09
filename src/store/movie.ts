@@ -56,7 +56,6 @@ export const useMovieStore = defineStore('counter', () => {
         }
       } else {
         moviesWithScrollPagination.value?.movies.push(...res.data.movies)
-        console.log(res.data.total, page.value * count)
         if (res.data.total > page.value * count) {
           hasMore.value = true
           page.value += 1

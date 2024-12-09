@@ -10,7 +10,6 @@ const isVisible = ref(false)
 const handleClickMenu = (e: Event) => {
   e.preventDefault()
   isVisible.value = !isVisible.value
-  console.log(isVisible.value, 'is visible')
 }
 
 const handleClickOutside = (event: any) => {

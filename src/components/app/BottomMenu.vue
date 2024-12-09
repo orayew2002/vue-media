@@ -3,7 +3,6 @@ import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 const current_link = useRoute()
 const router = useRouter()
-console.log(current_link.path, 'value link')
 const onNavigate = (path: string) => {
   router.push({ path })
 }

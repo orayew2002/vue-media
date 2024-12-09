@@ -8,7 +8,6 @@ const props = defineProps<{
 }>()
 
 const musicClickHandler = (path: string) => {
-  console.log(path, 'path')
   if (path) {
     window.open(`${import.meta.env.VITE_API_URL}${path}`, '_blank')
   }

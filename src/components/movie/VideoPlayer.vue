@@ -214,7 +214,6 @@ const handlePlayPause = (val: boolean) => {
 
 const onLoadMetadata = () => {
   isVideoLoading.value = false
-  console.log(formatDuration(video_ref.value?.duration), 'duration')
   totalVideoDuration.value = formatDuration(video_ref.value?.duration)
 }
 
@@ -375,8 +374,6 @@ const timelineMouseDownHandler = (e: MouseEvent | TouchEvent) => {
 }
 
 const toggleScrubbing = (e: MouseEvent | TouchEvent) => {
-  console.log('touch move')
-
   const rect = timeline_container_ref.value?.getBoundingClientRect()
   if (!rect) return
   // Get x position based on event type (mouse or touch)
@@ -451,7 +448,6 @@ function showControlsFn() {
 }
 
 function hideControls() {
-  console.log('hide controls')
   if (!document.fullscreenElement) {
     if (video_controls_container.value && pause_play_icons.value) {
       video_controls_container.value.style.opacity = '0'
