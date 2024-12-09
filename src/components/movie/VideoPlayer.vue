@@ -2,7 +2,6 @@
   <div
     ref="video_container_ref"
     class="video-container"
-    @click="controlsHandler"
     :class="{
       paused: isPaused,
       theater: isTheaterMode,
@@ -24,15 +23,25 @@
       @volumechange="volumeChangeHandler"
       @timeupdate="timeUpdateHandler"
       @dblclick="toggleFullScreen"
+      @click="controlsHandler"
       @loadeddata="isVideoLoading = false"
       @loadedmetadata="onLoadMetadata"
       ref="video_ref"
     ></video>
-    <div @dblclick="skipForwardHandler" class="skipForward" />
-    <div @dblclick="skipBackwardHandler" class="skipBackward" />
+    <div
+      @click="controlsHandler"
+      @dblclick="skipForwardHandler"
+      class="skipForward"
+    />
+    <div
+      @click="controlsHandler"
+      @dblclick="skipBackwardHandler"
+      class="skipBackward"
+    />
     <div
       class="video_contorls_container"
-      :class="showControls && !isPaused ? 'hide' : 'show'"
+      ref="video_controls_container"
+      :class="isMobile ? (showControls && !isPaused ? 'hide' : 'show') : ''"
     >
       <div
         ref="timeline_container_ref"
@@ -140,12 +149,12 @@
     </div>
     <div
       class="video_status_container"
-      :class="showControls && !isPaused ? 'hide' : ''"
+      :class="isMobile ? (showControls && !isPaused ? 'hide' : 'show') : ''"
     >
       <div v-if="isVideoLoading">
         <img src="/bars-scale-middle.svg" alt="" />
       </div>
-      <div v-else class="pause_play_icons">
+      <div v-else class="pause_play_icons" ref="pause_play_icons">
         <button @click="onTogglePlayPuse">
           <svg class="pause-icon" viewBox="0 0 24 24">
             <path fill="#ffff" d="M14,19H18V5H14M6,19H10V5H6V19Z" />
@@ -160,7 +169,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch, watchEffect, nextTick } from 'vue'
+import { onMounted, onUnmounted, ref, watch, nextTick } from 'vue'
 import formatDuration from '@/utils/formatDuration'
 import { useIsMobile } from '@/composables/useIsMobile'
 import dashjs from 'dashjs'
@@ -170,6 +179,8 @@ const isPaused = ref(true)
 const isVideoLoading = ref(true)
 const video_ref = ref<HTMLVideoElement | null>(null)
 const video_container_ref = ref<HTMLDivElement | null>(null)
+const video_controls_container = ref<HTMLDivElement | null>(null)
+const pause_play_icons = ref<HTMLDivElement | null>(null)
 const timeline_container_ref = ref<HTMLDivElement | null>(null)
 const buffered_ref = ref<HTMLDivElement | null>(null)
 // modes
@@ -193,7 +204,9 @@ const props = defineProps({
 })
 
 const controlsHandler = () => {
-  showControls.value = !showControls.value
+  if (isMobile.value) {
+    showControls.value = !showControls.value
+  }
 }
 const handlePlayPause = (val: boolean) => {
   isPaused.value = val
@@ -206,9 +219,6 @@ const onLoadMetadata = () => {
 }
 
 const togglePlay = () => {
-  if (isMobile.value) {
-    showControls.value = !showControls.value
-  }
   if (video_ref.value && !isMobile.value) {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     video_ref.value.paused ? video_ref.value.play() : video_ref.value.pause()
@@ -293,6 +303,7 @@ const fullScreenChangeHandler = () => {
     isFullScreenMode.value = true
   } else {
     isFullScreenMode.value = false
+    showControlsFn()
   }
 }
 
@@ -421,11 +432,34 @@ const onTogglePlayPuse = () => {
     isPaused.value = false
   }
 }
+let hideControlsTimeout: any
+function showControlsFn() {
+  if (video_controls_container.value && pause_play_icons.value) {
+    video_controls_container.value.style.opacity = '1'
+    pause_play_icons.value.style.opacity = '1'
+    clearTimeout(hideControlsTimeout)
 
-// watchEffect(() => {
-//   pathUrl.value = import.meta.env.VITE_API_URL + props.path
-//   console.log(props.path, 'path')
-// })
+    if (document.fullscreenElement && !video_ref.value?.paused) {
+      hideControlsTimeout = setTimeout(() => {
+        if (video_controls_container.value && pause_play_icons.value) {
+          video_controls_container.value.style.opacity = '0'
+          pause_play_icons.value.style.opacity = '0'
+        }
+      }, 3000)
+    }
+  }
+}
+
+function hideControls() {
+  console.log('hide controls')
+  if (!document.fullscreenElement) {
+    if (video_controls_container.value && pause_play_icons.value) {
+      video_controls_container.value.style.opacity = '0'
+      pause_play_icons.value.style.opacity = '0'
+    }
+  }
+}
+
 watch(
   () => props.id,
   async newId => {
@@ -482,6 +516,9 @@ onMounted(() => {
   document.addEventListener('fullscreenchange', fullScreenChangeHandler)
   document.addEventListener('mouseup', documentMouseupHandler)
   document.addEventListener('mousemove', documentMouseMoveHandler)
+  // Event Listeners
+  video_container_ref.value?.addEventListener('mousemove', showControlsFn)
+  video_container_ref.value?.addEventListener('mouseleave', hideControls)
   video_ref.value?.addEventListener('enterpictureinpicture', () =>
     toggleMiniPlayerMode(true),
   )

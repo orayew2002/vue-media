@@ -68,7 +68,7 @@ const { isMobile } = useIsMobile()
   width: 100px;
   transform: scale(1);
   transition: transform 0.3s ease-in-out;
-  height: 90%;
+  height: 140px;
   overflow: hidden;
 }
 
@@ -78,7 +78,7 @@ const { isMobile } = useIsMobile()
 }
 
 .movie_title {
-  font-size: 10px;
+  font-size: 8px;
   text-transform: capitalize;
   color: var(--movie-title);
   display: block;
@@ -139,7 +139,6 @@ const { isMobile } = useIsMobile()
 
 @media (min-width: 768px) and (max-width: 1440px) {
   .movie_item {
-    width: 100%;
     height: 300px;
   }
   .movie_title {
@@ -152,11 +151,11 @@ const { isMobile } = useIsMobile()
 
 @media (min-width: 1440px) {
   .movie_item {
-    width: 100%;
+    width: 200px;
     height: 300px;
   }
   .movie_title {
-    font-size: large;
+    font-size: medium;
   }
   .movie_duration {
     font-size: small;
