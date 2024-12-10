@@ -61,7 +61,7 @@ const { isMobile } = useIsMobile()
 img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .movie_screen::before {

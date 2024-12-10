@@ -83,7 +83,8 @@ onUnmounted(() => {
 
 <style scoped>
 .container {
-  width: 90%;
+  width: 95%;
+  max-width: var(--max-width);
   margin-inline: auto;
   padding-bottom: 1rem;
 }
@@ -118,6 +119,11 @@ h1 {
 @media screen and (min-width: 1120px) and (max-width: 1553px) {
   h1 {
     font-size: 1.5rem;
+  }
+}
+@media screen and (min-width: 2000px) {
+  .container {
+    width: 100%;
   }
 }
 </style>

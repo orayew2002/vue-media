@@ -31,6 +31,7 @@ const { isMobile } = useIsMobile()
 }
 .form {
   display: flex;
+  gap: 4px;
 }
 .form > input {
   width: 100%;

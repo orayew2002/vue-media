@@ -6,6 +6,7 @@ import formatDuration from '@/utils/formatDuration'
 import { ref } from 'vue'
 import { useIsMobile } from '@/composables/useIsMobile'
 import { useRouter } from 'vue-router'
+import { truncate } from '@/utils/truncate'
 const env = import.meta.env.VITE_API_URL
 const loadingImage = ref(true)
 const router = useRouter()
@@ -50,7 +51,9 @@ const { isMobile } = useIsMobile()
         </svg>
       </div>
     </div>
-    <span class="movie_title">{{ movie.title[locale as keyof TLang] }}</span>
+    <span class="movie_title">{{
+      truncate(movie.title[locale as keyof TLang], 20)
+    }}</span>
   </div>
 </template>
 <style scoped>

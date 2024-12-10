@@ -49,7 +49,7 @@ onMounted(() => {
   <AppLoading v-if="loading" />
   <Wrapper v-else>
     <div class="movie_view_container">
-      <div>
+      <div class="movie_player">
         <VideoPlayer
           :path="movie?.path"
           v-if="$route.params.id"
@@ -79,13 +79,15 @@ onMounted(() => {
 
 <style scoped>
 .movie_view_container {
-  padding-top: 0.5rem;
   padding-bottom: 3.5rem;
 }
+.movie_player {
+  width: 100%;
+}
 .movie_title_container {
-  width: 90%;
-  max-width: 1000px;
-  margin-inline: auto;
+  width: 95%;
+  max-width: var(--max-width);
+  margin: auto;
 }
 h2 {
   color: white;
@@ -95,7 +97,7 @@ h2 {
 .description {
   display: block;
   color: var(--slate-300);
-  font-size: smaller;
+  font-size: medium;
 }
 
 .sub_cat_title {
@@ -109,6 +111,11 @@ h2 {
   }
   .sub_cat_title {
     font-size: 14px;
+  }
+}
+@media screen and (min-width: 2000px) {
+  .movie_title_container {
+    width: 100%;
   }
 }
 </style>

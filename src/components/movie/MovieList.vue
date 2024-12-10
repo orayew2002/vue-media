@@ -14,9 +14,9 @@ const { locale } = useI18n()
 <template>
   <div class="movie_list_container">
     <div class="movie_list_header">
-      <RouterLink :to="'/movies/category/' + movies.id">{{
-        movies.title[locale as keyof TLang]
-      }}</RouterLink>
+      <RouterLink :to="'/movies/category/' + movies.id">
+        {{ movies.title[locale as keyof TLang] }}
+      </RouterLink>
       <div class="show_all">
         <span @click="$router.push('/movies/category/' + movies.id)">{{
           $t('all')
@@ -47,10 +47,11 @@ const { locale } = useI18n()
   width: 100%;
   max-height: 100%;
   display: flex;
+  padding-left: 4px;
   gap: 2rem;
-  padding: 10px;
   overflow-x: scroll;
   overflow-y: hidden;
+  margin-top: 4px;
   --webkit-overflow-scroll: none;
 }
 .movie_list::-webkit-scrollbar {
@@ -60,20 +61,21 @@ const { locale } = useI18n()
 .movie_list_header {
   display: flex;
   justify-content: space-between;
-  align-items: end;
+  align-items: center;
+  padding-block: 4px;
 }
 
 .show_all {
-  padding: 0.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1rem;
-  background-color: var(--bg-new);
-  border-radius: 20px;
+  gap: 4px;
+  background-color: var(--slate-800);
+  /* border-radius: 10px; */
   margin-right: 4px;
   cursor: pointer;
 }
+
 .show_all > span {
   color: #fff;
 }
@@ -82,15 +84,16 @@ const { locale } = useI18n()
   text-decoration: none;
   color: #ffff;
   /* padding: 1rem 0.5rem; */
-  padding-left: 0.5rem;
+  display: flex;
   font-size: 2rem;
+  align-self: self-start;
 }
 
 .right_arrow_img {
-  background-color: black;
-  padding-inline: 10px;
-  padding-block: 4px;
-  border-radius: 10px;
+  background-color: var(--slate-950);
+  display: flex;
+  padding: 4px;
+  border-radius: 50%;
 }
 
 @media screen and (max-width: 768px) {
@@ -100,26 +103,31 @@ const { locale } = useI18n()
   }
   .movie_list {
     gap: 10px;
-    padding: 6px;
+    /* padding: 6px; */
   }
   .movie_list_header > a {
     font-size: medium;
   }
   .show_all {
-    padding: 2px;
+    padding: 4px;
     border-radius: 10px;
   }
   .show_all > span {
     font-size: 10px;
   }
-  .right_arrow_img {
-    padding-inline: 3px;
-    padding-block: 0.1px;
-  }
 }
-@media (min-width: 768px) and (max-width: 1555px) {
+@media (min-width: 768px) and (max-width: 3000px) {
   .movie_list_header > a {
     font-size: x-large;
+    padding: 0;
+  }
+  .show_all {
+    padding-inline: 12px;
+    padding-block: 6px;
+    border-radius: 10px;
+  }
+  .show_all > span {
+    font-size: medium;
   }
 }
 </style>

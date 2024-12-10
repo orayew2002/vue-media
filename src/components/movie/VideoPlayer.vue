@@ -26,6 +26,8 @@
       @click="controlsHandler"
       @loadeddata="isVideoLoading = false"
       @loadedmetadata="onLoadMetadata"
+      playsinline="true"
+      controls="false"
       ref="video_ref"
     ></video>
     <div
@@ -555,7 +557,7 @@ onUnmounted(() => {
 .video-container {
   position: relative;
   width: 95%;
-  max-width: 1000px;
+  max-width: var(--max-width);
   display: flex;
   justify-content: center;
   margin-inline: auto;
@@ -564,6 +566,10 @@ onUnmounted(() => {
 
 video {
   width: 100%;
+}
+
+video::-webkit-media-controls {
+  display: none !important;
 }
 
 .video-container.theater,
@@ -836,6 +842,11 @@ video {
   .video_status_container > img {
     width: 12px;
     height: 15px;
+  }
+}
+@media screen and (min-width: 2000px) {
+  .video-container {
+    width: 100%;
   }
 }
 </style>

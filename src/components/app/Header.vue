@@ -40,11 +40,11 @@
 .header {
   position: relative;
   height: 90px;
-  width: 100%;
 }
 .header_container {
   position: fixed;
-  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
   padding: 0.6rem 0.5rem;
   background: linear-gradient(to bottom, rgba(0, 0, 0, 2), rgba(0, 0, 0, 0.9));
   display: flex;
@@ -52,6 +52,7 @@
   align-items: center;
   top: 0;
   left: 0;
+  right: 0;
   z-index: 105;
 }
 
