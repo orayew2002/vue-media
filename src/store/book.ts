@@ -34,6 +34,7 @@ export const useBookStore = defineStore('book', () => {
     } catch (err) {
       console.log(err)
       loading.value = false
+      hasMore.value = false
     } finally {
       loading.value = false
     }

@@ -64,7 +64,8 @@ export const useMovieStore = defineStore('counter', () => {
         }
       }
     } catch (err) {
-      console.log(err)
+      loadingForPaginated.value = false
+      hasMore.value = false
     } finally {
       loadingForPaginated.value = false
     }

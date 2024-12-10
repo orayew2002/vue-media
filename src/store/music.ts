@@ -32,6 +32,7 @@ export const useMusicStore = defineStore('music', () => {
     } catch (err) {
       console.log(err)
       loading.value = false
+      hasMore.value = false
     } finally {
       loading.value = false
     }
