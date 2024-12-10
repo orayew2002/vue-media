@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { useIsMobile } from '@/composables/useIsMobile'
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
+const { t } = useI18n()
 const search = ref('')
 const router = useRouter()
 const submitHandler = (e: Event) => {
@@ -16,6 +18,7 @@ const { isMobile } = useIsMobile()
   <div class="form_container">
     <form @submit="submitHandler" class="form" v-if="isMobile">
       <input type="text" v-model="search" placeholder="Interstellar" />
+      <button class="search-btn">{{ t('search') }}</button>
     </form>
   </div>
   <router-view />
@@ -25,6 +28,9 @@ const { isMobile } = useIsMobile()
 .form_container {
   padding-inline: 10px;
   padding-block: 4px;
+}
+.form {
+  display: flex;
 }
 .form > input {
   width: 100%;
@@ -39,5 +45,13 @@ const { isMobile } = useIsMobile()
 
 .form > input::placeholder {
   color: var(--slate-400);
+}
+.search-btn {
+  padding: 0.5rem 1rem;
+  background-color: var(--slate-800);
+  color: var(--slate-100);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 </style>

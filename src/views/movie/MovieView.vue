@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AppLoading from '@/components/app/AppLoading.vue'
+import Wrapper from '@/components/app/Wrapper.vue'
 import MoviesBySubCatId from '@/components/movie/MovieFetcher.vue'
 import VideoPlayer from '@/components/movie/VideoPlayer.vue'
 import { getMovieById } from '@/services/movies'
@@ -46,36 +47,39 @@ onMounted(() => {
 
 <template>
   <AppLoading v-if="loading" />
-  <div class="movie_view_container" v-else>
-    <div>
-      <VideoPlayer
-        :path="movie?.path"
-        v-if="$route.params.id"
-        :id="$route.params.id as string"
-      />
-      <div class="movie_title_container">
-        <h2>{{ movie?.title[$i18n.locale as keyof TLang] }}</h2>
-        <span class="sub_cat_title"
-          >|
-          {{
-            movie?.sub_categories[0].title[$i18n.locale as keyof TLang]
-          }}</span
-        >
-        <span class="description">{{
-          movie?.description[$i18n.locale as keyof TLang]
-        }}</span>
+  <Wrapper v-else>
+    <div class="movie_view_container">
+      <div>
+        <VideoPlayer
+          :path="movie?.path"
+          v-if="$route.params.id"
+          :id="$route.params.id as string"
+        />
+        <div class="movie_title_container">
+          <h2>{{ movie?.title[$i18n.locale as keyof TLang] }}</h2>
+          <span class="sub_cat_title"
+            >|
+            {{
+              movie?.sub_categories[0].title[$i18n.locale as keyof TLang]
+            }}</span
+          >
+          <span class="description">{{
+            movie?.description[$i18n.locale as keyof TLang]
+          }}</span>
+        </div>
       </div>
+      <MoviesBySubCatId
+        v-if="movie?.sub_categories[0]"
+        :id="movie?.sub_categories[0].id.toString()"
+        :data="data"
+      />
     </div>
-    <MoviesBySubCatId
-      v-if="movie?.sub_categories[0]"
-      :id="movie?.sub_categories[0].id.toString()"
-      :data="data"
-    />
-  </div>
+  </Wrapper>
 </template>
 
 <style scoped>
 .movie_view_container {
+  padding-top: 0.5rem;
   padding-bottom: 3.5rem;
 }
 .movie_title_container {
@@ -91,6 +95,7 @@ h2 {
 .description {
   display: block;
   color: var(--slate-300);
+  font-size: smaller;
 }
 
 .sub_cat_title {

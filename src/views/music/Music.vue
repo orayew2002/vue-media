@@ -3,6 +3,7 @@ import { useMusicStore } from '@/store/music'
 import MusicList from '@/components/music/MusicList.vue'
 import { onMounted, onUnmounted, ref, watch } from 'vue'
 import AppLoading from '@/components/app/AppLoading.vue'
+import Wrapper from '@/components/app/Wrapper.vue'
 const store = useMusicStore()
 const loadTrigger = ref(null)
 let observer: IntersectionObserver | null = null
@@ -45,21 +46,23 @@ onUnmounted(() => {
 })
 </script>
 <template>
-  <AppLoading v-if="store.loading" />
-  <div class="music_container">
-    <MusicList
-      v-if="store.music?.musics.length"
-      :music-all="store.music?.musics"
-    />
-    <router-view />
-    <div
-      ref="loadTrigger"
-      class="load-trigger"
-      v-if="!store.loading && store.hasMore"
-    >
-      Loading more music...
+  <Wrapper>
+    <AppLoading v-if="store.loading" />
+    <div class="music_container">
+      <MusicList
+        v-if="store.music?.musics.length"
+        :music-all="store.music?.musics"
+      />
+      <router-view />
+      <div
+        ref="loadTrigger"
+        class="load-trigger"
+        v-if="!store.loading && store.hasMore"
+      >
+        Loading more music...
+      </div>
     </div>
-  </div>
+  </Wrapper>
 </template>
 <style scoped>
 .music_container {

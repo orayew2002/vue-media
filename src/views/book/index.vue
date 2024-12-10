@@ -3,6 +3,7 @@ import BookList from '@/components/book/BookList.vue'
 import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { useBookStore } from '@/store/book'
 import AppLoading from '@/components/app/AppLoading.vue'
+import Wrapper from '@/components/app/Wrapper.vue'
 const store = useBookStore()
 const loadTrigger = ref(null)
 let observer: IntersectionObserver | null = null
@@ -45,17 +46,19 @@ onUnmounted(() => {
 })
 </script>
 <template>
-  <AppLoading v-if="store.loading" />
-  <div class="book_container">
-    <BookList v-if="store.books?.books.length" :books="store.books?.books" />
-    <div
-      ref="loadTrigger"
-      class="load-trigger"
-      v-if="!store.loading && store.hasMore"
-    >
-      Loading more books...
+  <Wrapper>
+    <AppLoading v-if="store.loading" />
+    <div class="book_container">
+      <BookList v-if="store.books?.books.length" :books="store.books?.books" />
+      <div
+        ref="loadTrigger"
+        class="load-trigger"
+        v-if="!store.loading && store.hasMore"
+      >
+        Loading more books...
+      </div>
     </div>
-  </div>
+  </Wrapper>
 </template>
 <style scoped>
 .book_container {

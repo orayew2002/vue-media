@@ -21,6 +21,7 @@
   --movie-title: #acacac;
   --bg-new: #18181a;
   --link-hover: #36c0f2;
+  --max-width: 1536px;
 }
 *,
 *::before,

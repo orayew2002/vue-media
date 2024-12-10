@@ -54,7 +54,7 @@
           <div class="thumb-indicator"></div>
         </div>
       </div>
-      <div class="controls">
+      <div v-if="!isMobile" class="controls">
         <button
           ref="play_pause_btn"
           @click="togglePlayByClickingBtn"
@@ -131,6 +131,27 @@
             />
           </svg>
         </button>
+        <button @click="toggleFullScreen" class="full-screen-btn">
+          <svg class="open" viewBox="0 0 24 24">
+            <path
+              fill="currentColor"
+              d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"
+            />
+          </svg>
+          <svg class="close" viewBox="0 0 24 24">
+            <path
+              fill="currentColor"
+              d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"
+            />
+          </svg>
+        </button>
+      </div>
+      <div v-else class="controls">
+        <div class="duration-container">
+          <div class="current-time">{{ currentTimeOfVideo }}</div>
+          /
+          <div class="total-time">{{ totalVideoDuration }}</div>
+        </div>
         <button @click="toggleFullScreen" class="full-screen-btn">
           <svg class="open" viewBox="0 0 24 24">
             <path
@@ -533,7 +554,7 @@ onUnmounted(() => {
 <style scoped>
 .video-container {
   position: relative;
-  width: 90%;
+  width: 95%;
   max-width: 1000px;
   display: flex;
   justify-content: center;
@@ -554,10 +575,10 @@ video {
 .video-container.theater {
   max-height: 90vh;
 }
-
+/* 
 .video-container.full-screen {
   max-height: 100vh;
-}
+} */
 
 .skipBackward {
   position: absolute;

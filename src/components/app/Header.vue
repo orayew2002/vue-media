@@ -16,7 +16,15 @@
       <div class="links">
         <ul>
           <li v-for="link in links" :key="link.name">
-            <RouterLink :to="link.path">{{ $t(link.name) }}</RouterLink>
+            <RouterLink
+              :class="
+                $route.path?.toString().includes(link.name)
+                  ? 'router-link-active'
+                  : ''
+              "
+              :to="link.path"
+              >{{ $t(link.name) }}</RouterLink
+            >
             <CategoryLinks :categories="categories" :link="link" />
           </li>
         </ul>
@@ -119,7 +127,7 @@ import Locales from '@/components/app/Locales.vue'
 import CategoryMenu from '@/components/app/CategoryMenu.vue'
 import type { TMovieCategory } from '@/types/movie'
 import { onMounted, onUnmounted, ref, watchEffect } from 'vue'
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router'
 import Search from './Search.vue'
 import BottomMenu from '@/components/app/BottomMenu.vue'
 import { links } from '@/utils/links'
@@ -129,7 +137,7 @@ const { isMobile } = useIsMobile()
 const categories = ref<TMovieCategory[]>([])
 const menuIsOpened = ref(false)
 const menu = ref<HTMLDivElement>()
-
+const route = useRoute()
 const handleClickOutside = (event: any) => {
   if (menuIsOpened.value && menu.value && !menu.value.contains(event.target)) {
     menuIsOpened.value = false
@@ -137,6 +145,7 @@ const handleClickOutside = (event: any) => {
 }
 
 watchEffect(async () => {
+  console.log(route.path, 'path')
   try {
     const res = await getMovieCategories()
     categories.value = res.data

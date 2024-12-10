@@ -11,4 +11,5 @@ export default {
   login: 'Войти',
   hide: 'Скрыть',
   show: 'Показать',
+  search: 'Поиск',
 }

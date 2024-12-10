@@ -32,5 +32,7 @@ onMounted(() => {
 <style scoped>
 .movie-list-home:last-child {
   margin-bottom: 3.5rem;
+  max-width: var(--max-width);
+  margin-inline: auto;
 }
 </style>

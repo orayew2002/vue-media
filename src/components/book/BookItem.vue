@@ -59,7 +59,8 @@ const route = useRoute()
 }
 
 .book_item > p {
-  font-size: 10px;
+  font-size: small;
+  width: 90%;
 }
 
 .bg-dark {
@@ -80,7 +81,13 @@ const route = useRoute()
 }
 
 svg {
-  fill: var(--slate-400);
+  fill: var(--slate-200);
+  position: relative;
+  width: 10%;
+  height: 30px;
+  padding: 5px;
+  background-color: var(--slate-600);
+  border-radius: 5px;
 }
 
 @media screen and (min-width: 900px) {
@@ -90,6 +97,10 @@ svg {
   }
   .book_item > p {
     font-size: 14px;
+  }
+
+  svg {
+    width: 5%;
   }
 }
 </style>

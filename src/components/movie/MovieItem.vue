@@ -5,9 +5,10 @@ import type { TLang } from '@/types/common'
 import formatDuration from '@/utils/formatDuration'
 import { ref } from 'vue'
 import { useIsMobile } from '@/composables/useIsMobile'
+import { useRouter } from 'vue-router'
 const env = import.meta.env.VITE_API_URL
 const loadingImage = ref(true)
-
+const router = useRouter()
 const props = defineProps<{
   movie: TMovie
 }>()
@@ -22,7 +23,7 @@ const { isMobile } = useIsMobile()
 </script>
 
 <template>
-  <RouterLink :to="'/movies/' + movie.id" class="movie_item_link">
+  <div class="movie_item_container" @click="router.push(`/movies/${movie.id}`)">
     <div class="movie_item">
       <span class="movie_duration">{{ formatDuration(movie.duration) }}</span>
       <img
@@ -49,27 +50,25 @@ const { isMobile } = useIsMobile()
         </svg>
       </div>
     </div>
-    <span class="movie_title"
-      >{{ movie.title[locale as keyof TLang] }} {{ movie.id }}</span
-    >
-  </RouterLink>
+    <span class="movie_title">{{ movie.title[locale as keyof TLang] }}</span>
+  </div>
 </template>
 <style scoped>
-.movie_item_link {
-  text-decoration: none;
-  position: relative;
+.movie_item_container {
+  width: 140px;
   display: flex;
   flex-direction: column;
+  height: fit-content;
 }
 .movie_item {
   position: relative;
   flex-shrink: 0;
   scroll-behavior: smooth;
-  width: 100px;
+  width: 140px;
   transform: scale(1);
   transition: transform 0.3s ease-in-out;
-  height: 140px;
   overflow: hidden;
+  height: 140px;
 }
 
 .movie_item:hover {
@@ -78,15 +77,11 @@ const { isMobile } = useIsMobile()
 }
 
 .movie_title {
-  font-size: 8px;
+  font-size: small;
   text-transform: capitalize;
   color: var(--movie-title);
   display: block;
-}
-
-.movie_item_info > p {
-  font-size: smaller;
-  color: var(--slate-300);
+  text-wrap: wrap;
 }
 
 .movie_duration {
@@ -130,29 +125,13 @@ const { isMobile } = useIsMobile()
 
 /* Shimmer Effect */
 
-@media screen and (min-width: 500px) and (max-width: 768px) {
-  .movie_item {
-    width: 120px;
-    height: 90%;
+@media (min-width: 768px) {
+  .movie_item_container {
+    width: 200px;
   }
-}
-
-@media (min-width: 768px) and (max-width: 1440px) {
-  .movie_item {
-    height: 300px;
-  }
-  .movie_title {
-    font-size: medium;
-  }
-  .movie_duration {
-    font-size: small;
-  }
-}
-
-@media (min-width: 1440px) {
   .movie_item {
     width: 200px;
-    height: 300px;
+    height: 250px;
   }
   .movie_title {
     font-size: medium;

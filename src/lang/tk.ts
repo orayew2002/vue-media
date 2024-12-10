@@ -11,4 +11,5 @@ export default {
   login: 'Içeri giriň',
   hide: 'Buk',
   show: 'Görkez',
+  search: 'Gözleg',
 }

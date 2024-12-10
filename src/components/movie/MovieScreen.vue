@@ -146,11 +146,11 @@ img {
     height: 400px;
   }
   .movie_screen__info {
-    top: 50%;
+    top: 40%;
   }
   .movie_screen__info > p {
     width: 70vw;
-    font-size: 10px;
+    font-size: small;
   }
   .movie_screen__info > span {
     font-size: 1rem;

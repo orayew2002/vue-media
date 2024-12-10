@@ -103,7 +103,7 @@ const { locale } = useI18n()
     padding: 6px;
   }
   .movie_list_header > a {
-    font-size: 12px;
+    font-size: medium;
   }
   .show_all {
     padding: 2px;
@@ -114,12 +114,12 @@ const { locale } = useI18n()
   }
   .right_arrow_img {
     padding-inline: 3px;
-    padding-block: 2px;
+    padding-block: 0.1px;
   }
 }
-@media (min-width: 768px) and (max-width: 1440px) {
+@media (min-width: 768px) and (max-width: 1555px) {
   .movie_list_header > a {
-    font-size: 1.5rem;
+    font-size: x-large;
   }
 }
 </style>

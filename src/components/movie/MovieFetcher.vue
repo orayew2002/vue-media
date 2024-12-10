@@ -65,21 +65,19 @@ onUnmounted(() => {
 <template>
   <div v-if="store.moviesWithScrollPagination" class="container">
     <h1>{{ data?.title[$i18n.locale as keyof TLang] }}</h1>
-    <div class="movies_by_category">
+    <div class="movie_list">
       <MovieItem
         v-for="movie in store.moviesWithScrollPagination.movies"
         :key="movie.id"
         :movie="movie"
         class="movie-item"
       />
+      <div
+        ref="loadTrigger"
+        class="load-trigger"
+        v-if="!store.loadingSubCatId && store.hasMore"
+      ></div>
     </div>
-  </div>
-  <div
-    ref="loadTrigger"
-    class="load-trigger"
-    v-if="!store.loadingSubCatId && store.hasMore"
-  >
-    Loading more movies...
   </div>
 </template>
 
@@ -89,14 +87,21 @@ onUnmounted(() => {
   margin-inline: auto;
   padding-bottom: 1rem;
 }
-.movies_by_category {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  margin-inline: auto;
+.movie_list {
+  width: 100%;
+  max-height: 100%;
+  display: flex;
   gap: 1rem;
+  /* padding: 10px; */
+  overflow-x: scroll;
+  overflow-y: hidden;
+  --webkit-overflow-scroll: none;
+}
+.movie_list::-webkit-scrollbar {
+  display: none;
 }
 
-.movies_by_category:last-child {
+.movie_list:last-child {
   margin-bottom: 3.3rem;
 }
 
@@ -110,23 +115,9 @@ h1 {
   color: white;
   text-align: center;
 }
-@media screen and (min-width: 1120px) and (max-width: 1680px) {
-  .movies_by_category {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2rem;
-  }
+@media screen and (min-width: 1120px) and (max-width: 1553px) {
   h1 {
-    font-size: 2rem;
-  }
-}
-
-@media screen and (min-width: 1681px) {
-  .movies_by_category {
-    grid-template-columns: repeat(5, 1fr);
-    gap: 2rem;
-  }
-  h1 {
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
 }
 </style>

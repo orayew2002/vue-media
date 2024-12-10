@@ -50,6 +50,7 @@ const route = useRoute()
   align-items: center;
   background-color: transparent;
   gap: 1rem;
+  border-radius: 6px;
 }
 
 .bg-dark {
@@ -66,19 +67,20 @@ const route = useRoute()
 }
 .music_item > svg {
   position: relative;
-  width: 20px;
-  height: 20px;
+  width: 40px;
+  height: 30px;
   padding: 5px;
-  background-color: var(--slate-600);
+  background-color: var(--slate-200);
+  border-radius: 5px;
 }
 
 .music_item > p {
   color: var(--slate-300);
-  font-size: 10px;
+  font-size: small;
 }
 
 svg {
-  fill: var(--slate-400);
+  fill: var(--slate-600);
 }
 
 @media screen and (min-width: 900px) {
