@@ -124,12 +124,12 @@ a:hover {
 
 <script setup lang="ts">
 import { getMovieCategories } from '@/services/movies'
-import Locales from '@/components/app/Locales.vue'
+import Locales from '@/components/app/LocalesComponent.vue'
 import CategoryMenu from '@/components/app/CategoryMenu.vue'
 import type { TMovieCategory } from '@/types/movie'
 import { onMounted, onUnmounted, ref, watchEffect } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
-import Search from './Search.vue'
+import Search from './SearchComponent.vue'
 import BottomMenu from '@/components/app/BottomMenu.vue'
 import { links } from '@/utils/links'
 import { useIsMobile } from '@/composables/useIsMobile'
@@ -139,8 +139,12 @@ const categories = ref<TMovieCategory[]>([])
 const menuIsOpened = ref(false)
 const menu = ref<HTMLDivElement>()
 const route = useRoute()
-const handleClickOutside = (event: any) => {
-  if (menuIsOpened.value && menu.value && !menu.value.contains(event.target)) {
+const handleClickOutside = (event: MouseEvent) => {
+  if (
+    menuIsOpened.value &&
+    menu.value &&
+    !menu.value.contains(event.target as Node)
+  ) {
     menuIsOpened.value = false
   }
 }

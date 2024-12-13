@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import MovieList from '@/components/movie/MovieList.vue'
-import MovieScreen from '@/components/movie/MovieScreen.vue'
 import AppLoading from '@/components/app/AppLoading.vue'
 import { useMovieStore } from '@/store/movie'
 
@@ -17,6 +16,7 @@ onMounted(() => {
   <div v-else>
     <div class="movie-list-home">
       <MovieList
+        v-bind:key="movies.id"
         v-for="movies in movieStore.moviesHomePage"
         :movies="movies"
         class="movie-list-home"

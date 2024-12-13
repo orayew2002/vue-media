@@ -2,13 +2,11 @@
 import { useIsMobile } from '@/composables/useIsMobile'
 import type { TLang } from '@/types/common'
 import type { TMusic } from '@/types/music'
-import { useRoute } from 'vue-router'
 
-const props = defineProps<{
+defineProps<{
   book: TMusic
 }>()
 const { isMobile } = useIsMobile()
-const route = useRoute()
 </script>
 <template>
   <div

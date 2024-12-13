@@ -3,7 +3,7 @@ import { useMovieStore } from '@/store/movie'
 import MovieItem from '@/components/movie/MovieItem.vue'
 import { onMounted, ref, onUnmounted, watch } from 'vue'
 import type { TLang } from '@/types/common'
-import type { TMovie, TMovieCategory } from '@/types/movie'
+import type { TMovieCategory } from '@/types/movie'
 const store = useMovieStore()
 const loadTrigger = ref(null)
 let observer: IntersectionObserver | null = null

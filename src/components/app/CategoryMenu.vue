@@ -2,7 +2,7 @@
 import type { TMovieCategory } from '@/types/movie'
 import { onMounted, onUnmounted, ref } from 'vue'
 import CategoryLinks from '@/components/app/CategoryLinks.vue'
-const props = defineProps<{
+defineProps<{
   categories: TMovieCategory[]
 }>()
 const menu = ref<HTMLButtonElement>()
@@ -12,8 +12,12 @@ const handleClickMenu = (e: Event) => {
   isVisible.value = !isVisible.value
 }
 
-const handleClickOutside = (event: any) => {
-  if (isVisible.value && menu.value && !menu.value.contains(event.target)) {
+const handleClickOutside = (event: MouseEvent) => {
+  if (
+    isVisible.value &&
+    menu.value &&
+    !menu.value.contains(event.target as Node)
+  ) {
     isVisible.value = false
   }
 }

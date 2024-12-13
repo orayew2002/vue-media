@@ -2,7 +2,7 @@
 import { useIsMobile } from '@/composables/useIsMobile'
 import type { TLang } from '@/types/common'
 import type { TMovieCategory } from '@/types/movie'
-const props = defineProps<{
+defineProps<{
   categories: TMovieCategory[]
   link: {
     name: string
@@ -17,7 +17,7 @@ const { isMobile } = useIsMobile()
     :class="{ for_mobile: isMobile }"
     v-if="link.name === 'movies'"
   >
-    <li v-for="cat in categories">
+    <li v-bind:key="cat.id" v-for="cat in categories">
       <RouterLink :key="cat.id" :to="'/movies/category/' + cat.id">{{
         cat.title[$i18n.locale as keyof TLang]
       }}</RouterLink>

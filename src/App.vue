@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
-import Header from '@/components/app/Header.vue'
-import Wrapper from './components/app/Wrapper.vue'
+import Header from '@/components/app/HeaderComponent.vue'
+import Wrapper from './components/app/WrapperComponent.vue'
 </script>
 
 <template>

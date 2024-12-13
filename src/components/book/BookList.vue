@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import BookItem from '@/components/book/BookItem.vue'
 import type { TBook } from '@/types/book'
-import { useRouter } from 'vue-router'
-const router = useRouter()
 const props = defineProps<{
   books: TBook[]
 }>()

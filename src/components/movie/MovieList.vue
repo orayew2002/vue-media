@@ -4,7 +4,7 @@ import { RouterLink } from 'vue-router'
 import MovieItem from '@/components/movie/MovieItem.vue'
 import { useI18n } from 'vue-i18n'
 import type { TLang } from '@/types/common'
-const props = defineProps<{
+defineProps<{
   movies: TMovieHomePage
 }>()
 

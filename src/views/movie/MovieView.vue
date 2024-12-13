@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AppLoading from '@/components/app/AppLoading.vue'
-import Wrapper from '@/components/app/Wrapper.vue'
+import Wrapper from '@/components/app/WrapperComponent.vue'
 import MoviesBySubCatId from '@/components/movie/MovieFetcher.vue'
 import VideoPlayer from '@/components/movie/VideoPlayer.vue'
 import { getMovieById } from '@/services/movies'

@@ -2,7 +2,7 @@ import type { AxiosError, AxiosInstance } from 'axios'
 import baseAxios from 'axios'
 import router from '@/router'
 const baseURL = import.meta.env.VITE_API_URL?.toString()
-// eslint-disable-next-line consistent-return
+
 // const refrshAccessToken = async () => {
 // 	try {
 // 		const { data } = await refreshToken(
@@ -19,6 +19,7 @@ export const getAxios = (): AxiosInstance => {
     headers: { 'Content-Type': 'application/json' },
   })
   instance.interceptors.request.use(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (config: { headers: any; params?: any }) => {
       if (!config.headers.Authorization) {
         // TODO get token from store

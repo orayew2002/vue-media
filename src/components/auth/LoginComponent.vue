@@ -14,8 +14,8 @@ const submitHandler = async (e: Event) => {
       localStorage.setItem('token', res.data.token)
       router.push('/')
     }
-  } catch (err) {
-    alert('Girizem maglumatlaryňyz Nädogry !!!')
+  } catch {
+    alert('Girizen maglumatlaryňyz Nädogry !!!')
   }
 }
 </script>

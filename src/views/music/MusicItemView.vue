@@ -75,7 +75,7 @@ const documentMouseupHandler = () => {
   }
 }
 
-const documentMouseMoveHandler = (e: any) => {
+const documentMouseMoveHandler = (e: MouseEvent) => {
   if (isScrubbing.value) {
     toggleScrubbing(e)
   }

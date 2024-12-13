@@ -197,6 +197,7 @@ import formatDuration from '@/utils/formatDuration'
 import { useIsMobile } from '@/composables/useIsMobile'
 import dashjs from 'dashjs'
 const { isMobile } = useIsMobile()
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let player: any = null
 const isPaused = ref(true)
 const isVideoLoading = ref(true)
@@ -295,6 +296,7 @@ const toggleFullScreen = () => {
   if (document.fullscreenElement == null) {
     video_container_ref.value?.requestFullscreen()
     if (isMobile.value) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ;(screen.orientation as any).lock('landscape')
     }
   } else {
@@ -419,13 +421,13 @@ const toggleScrubbing = (e: MouseEvent | TouchEvent) => {
   }
 }
 
-const documentMouseupHandler = (e: any) => {
+const documentMouseupHandler = () => {
   if (isScrubbing.value) {
     isScrubbing.value = false
   }
 }
 
-const documentMouseMoveHandler = (e: any) => {
+const documentMouseMoveHandler = (e: MouseEvent | TouchEvent) => {
   if (isScrubbing.value) {
     toggleScrubbing(e)
   }
@@ -452,6 +454,7 @@ const onTogglePlayPuse = () => {
     isPaused.value = false
   }
 }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let hideControlsTimeout: any
 function showControlsFn() {
   if (video_controls_container.value && pause_play_icons.value) {

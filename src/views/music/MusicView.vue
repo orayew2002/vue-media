@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import BookList from '@/components/book/BookList.vue'
+import { useMusicStore } from '@/store/music'
+import MusicList from '@/components/music/MusicList.vue'
 import { onMounted, onUnmounted, ref, watch } from 'vue'
-import { useBookStore } from '@/store/book'
 import AppLoading from '@/components/app/AppLoading.vue'
-import Wrapper from '@/components/app/Wrapper.vue'
-const store = useBookStore()
+import Wrapper from '@/components/app/WrapperComponent.vue'
+const store = useMusicStore()
 const loadTrigger = ref(null)
 let observer: IntersectionObserver | null = null
 const createObserver = () => {
@@ -17,7 +17,7 @@ const createObserver = () => {
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting && store.hasMore && !store.loading) {
-        store.getBooksFn()
+        store.getMusic()
       }
     })
   }, options)
@@ -35,7 +35,7 @@ watch(loadTrigger, newVal => {
 onMounted(() => {
   createObserver()
   store.page = 1
-  store.getBooksFn()
+  store.getMusic()
 })
 
 onUnmounted(() => {
@@ -48,20 +48,24 @@ onUnmounted(() => {
 <template>
   <Wrapper>
     <AppLoading v-if="store.loading" />
-    <div class="book_container">
-      <BookList v-if="store.books?.books.length" :books="store.books?.books" />
+    <div class="music_container">
+      <MusicList
+        v-if="store.music?.musics.length"
+        :music-all="store.music?.musics"
+      />
+      <router-view />
       <div
         ref="loadTrigger"
         class="load-trigger"
         v-if="!store.loading && store.hasMore"
       >
-        Loading more books...
+        Loading more music...
       </div>
     </div>
   </Wrapper>
 </template>
 <style scoped>
-.book_container {
+.music_container {
   position: relative;
 }
 .load-trigger {

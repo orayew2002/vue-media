@@ -4,12 +4,11 @@ import { useI18n } from 'vue-i18n'
 import type { TLang } from '@/types/common'
 import { ref } from 'vue'
 import { truncate } from '@/utils/truncate'
-import { useIsMobile } from '@/composables/useIsMobile'
 import { useRouter } from 'vue-router'
 const env = import.meta.env.VITE_API_URL
 const loadingImage = ref(true)
 const router = useRouter()
-const props = defineProps<{
+defineProps<{
   movie: TMovie
 }>()
 
@@ -23,8 +22,6 @@ const onMovieClick = (movie: TMovie) => {
   // e.preventDefault()
   router.push({ name: 'movie', params: { id: movie.id } })
 }
-
-const { isMobile } = useIsMobile()
 </script>
 
 <template>

@@ -10,7 +10,7 @@ import { truncate } from '@/utils/truncate'
 const env = import.meta.env.VITE_API_URL
 const loadingImage = ref(true)
 const router = useRouter()
-const props = defineProps<{
+defineProps<{
   movie: TMovie
 }>()
 

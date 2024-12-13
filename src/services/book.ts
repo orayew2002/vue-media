@@ -1,4 +1,4 @@
-import type { TBook, TBookAll } from '@/types/book'
+import type { TBookAll } from '@/types/book'
 import type { AxiosResponse } from 'axios'
 import api from '@/plugins/api'
 

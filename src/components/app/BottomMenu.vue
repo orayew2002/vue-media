@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 const current_link = useRoute()
 const router = useRouter()
