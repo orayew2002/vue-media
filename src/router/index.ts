@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/home/HomeView.vue'
-import MovieView from '@/views/movie/MovieView.vue'
-import BookView from '@/views/book/bookview.vue'
-import LoginView from '@/views/login/LoginView.vue'
+import Movie from '@/views/movie/MovieView.vue'
+import Book from '@/views/book/BookView.vue'
+import Login from '@/views/login/LoginView.vue'
 import MoviesByCategory from '@/views/movie/MoviesByCategory.vue'
-import SearchView from '@/views/search/SearchView.vue'
-import SearchMovie from '@/views/search/SearchMovie.vue'
+import Search from '@/views/search/SearchView.vue'
+import SearchM from '@/views/search/SearchMovie.vue'
 import Music from '@/views/music/MusicView.vue'
 import MusicItemView from '@/views/music/MusicItemView.vue'
 const router = createRouter({
@@ -31,17 +31,17 @@ const router = createRouter({
     {
       path: '/books',
       name: 'books',
-      component: BookView,
+      component: Book,
     },
     {
       path: '/login',
       name: 'login',
-      component: LoginView,
+      component: Login,
     },
     {
       path: '/movies/:id',
       name: 'movie',
-      component: MovieView,
+      component: Movie,
     },
     {
       path: '/movies/category/:id',
@@ -51,12 +51,12 @@ const router = createRouter({
     {
       path: '/search',
       name: 'search',
-      component: SearchView,
+      component: Search,
       children: [
         {
           path: 'movies/:search',
           name: 'search-movie',
-          component: SearchMovie,
+          component: SearchM,
         },
       ],
     },
