@@ -16,6 +16,7 @@ import Wrapper from './components/app/Wrapper.vue'
 <style scoped>
 .outlet_container {
   height: 100%;
+  margin-top: 5px;
   background-color: var(--slate-950);
 }
 </style>

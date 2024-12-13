@@ -5,8 +5,10 @@ import type { TLang } from '@/types/common'
 import { ref } from 'vue'
 import { truncate } from '@/utils/truncate'
 import { useIsMobile } from '@/composables/useIsMobile'
+import { useRouter } from 'vue-router'
 const env = import.meta.env.VITE_API_URL
 const loadingImage = ref(true)
+const router = useRouter()
 const props = defineProps<{
   movie: TMovie
 }>()
@@ -17,11 +19,16 @@ const onImageLoad = () => {
   loadingImage.value = false
 }
 
+const onMovieClick = (movie: TMovie) => {
+  // e.preventDefault()
+  router.push({ name: 'movie', params: { id: movie.id } })
+}
+
 const { isMobile } = useIsMobile()
 </script>
 
 <template>
-  <div v-if="movie" class="movie_screen">
+  <div v-if="movie" class="movie_screen" @click="onMovieClick(movie)">
     <!-- Skeleton -->
     <div v-if="loadingImage" class="skeleton"></div>
     <div class="movie_screen__info">
@@ -29,17 +36,10 @@ const { isMobile } = useIsMobile()
       <p>
         {{ truncate(movie.description[locale as keyof TLang], 200) }}
       </p>
-      <button
-        @click="
-          e => {
-            e.preventDefault()
-            $router.push({ name: 'movie', params: { id: movie.id } })
-          }
-        "
-      >
+      <button @click="onMovieClick(movie)">
         <div class="movie_screen__info__play">
           <img src="/play.svg" alt="play svg" />
-          <span v-if="!isMobile">{{ $t('play') }}</span>
+          <span>{{ $t('play') }}</span>
         </div>
       </button>
     </div>
@@ -158,6 +158,12 @@ img {
 
   .movie_screen__info > button {
     padding: 0.3rem 0.2rem;
+  }
+  .movie_screen__info__play {
+    padding: 3px;
+  }
+  .movie_screen__info__play > span {
+    font-size: small;
   }
 }
 

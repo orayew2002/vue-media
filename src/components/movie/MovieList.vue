@@ -12,7 +12,7 @@ const { locale } = useI18n()
 </script>
 
 <template>
-  <div class="movie_list_container">
+  <div class="movie_list_container" v-if="movies.movies.length > 0">
     <div class="movie_list_header">
       <RouterLink :to="'/movies/category/' + movies.id">
         {{ movies.title[locale as keyof TLang] }}
@@ -74,6 +74,7 @@ const { locale } = useI18n()
   /* border-radius: 10px; */
   margin-right: 4px;
   cursor: pointer;
+  width: 120px !important;
 }
 
 .show_all > span {
@@ -111,6 +112,7 @@ const { locale } = useI18n()
   .show_all {
     padding: 4px;
     border-radius: 10px;
+    width: 90px !important;
   }
   .show_all > span {
     font-size: 10px;

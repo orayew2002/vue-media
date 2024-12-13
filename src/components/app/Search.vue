@@ -45,7 +45,7 @@ const router = useRouter()
   padding: 5px 10px;
   width: 44px;
   height: 40px;
-  background-color: var(--slate-800);
+  background-color: var(--slate-950);
   transition:
     width 0.3s ease,
     height 0.3s ease,
@@ -57,7 +57,7 @@ const router = useRouter()
 .search-input.expanded {
   border: 1px solid var(--slate-600);
   width: 250px;
-  height: 50px;
+  height: 40px;
 }
 
 .search_icon {
@@ -75,7 +75,7 @@ const router = useRouter()
 }
 
 .search-input.expanded .icon {
-  width: 60%;
+  width: 50%;
   height: 100%;
 }
 .search-input > form > input {

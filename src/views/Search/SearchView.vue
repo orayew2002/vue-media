@@ -28,6 +28,7 @@ const { isMobile } = useIsMobile()
 .form_container {
   padding-inline: 10px;
   padding-block: 4px;
+  margin-top: 5px;
 }
 .form {
   display: flex;

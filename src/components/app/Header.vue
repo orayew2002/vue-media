@@ -1,14 +1,12 @@
 <template>
   <div class="header">
     <div class="header_container">
-      <div class="header_logo_search">
-        <img
-          src="@/assets/img/logo.svg"
-          alt="logo"
-          @click="() => $router.push('/')"
-        />
-        <Search v-if="!isMobile" />
-      </div>
+      <img
+        src="@/assets/img/logo.svg"
+        alt="logo"
+        @click="() => $router.push('/')"
+      />
+
       <CategoryMenu
         v-if="$route.name?.toString().includes('movie') && isMobile"
         :categories="categories"
@@ -29,8 +27,10 @@
           </li>
         </ul>
       </div>
-
-      <Locales />
+      <div class="header_logo_search">
+        <Search v-if="!isMobile" />
+        <Locales />
+      </div>
     </div>
   </div>
   <BottomMenu v-if="isMobile" />
@@ -76,7 +76,7 @@
   position: relative;
 }
 
-.header_logo_search > img {
+img {
   width: 10rem;
   cursor: pointer;
 }

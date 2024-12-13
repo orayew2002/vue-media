@@ -48,11 +48,10 @@ watch(
 .container {
   width: 90%;
   margin-inline: auto;
+  overflow-x: scroll;
 }
 .movies_by_search {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  margin-inline: auto;
+  display: flex;
   gap: 1rem;
 }
 

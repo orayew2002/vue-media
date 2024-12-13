@@ -35,7 +35,7 @@ li:hover .dropdown_container {
   position: absolute;
   top: 100%;
   left: 0;
-  width: 120px;
+  width: 200px;
   transition: 0.7s ease-in-out;
   border-radius: 5px;
   display: none;
@@ -46,14 +46,14 @@ li:hover .dropdown_container {
 }
 
 .dropdown_container > li {
-  padding: 4px;
+  padding: 8px;
   width: 100%;
 }
 
 .dropdown_container > li > a {
   display: block;
   color: #fff;
-  font-size: 10px;
+  font-size: 1rem;
   padding-bottom: 3px;
   text-transform: uppercase;
   text-decoration: none;
@@ -73,9 +73,6 @@ a:hover {
 }
 
 @media screen and (min-width: 1300px) {
-  .dropdown_container {
-    width: 200px;
-  }
   .dropdown_container > li > a {
     font-size: 1rem;
   }

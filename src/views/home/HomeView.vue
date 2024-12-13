@@ -15,10 +15,6 @@ onMounted(() => {
 <template>
   <AppLoading v-if="movieStore.loading" />
   <div v-else>
-    <MovieScreen
-      v-if="movieStore.moviesHomePage[1]?.movies[0].id"
-      :movie="movieStore.moviesHomePage[1]?.movies[0]"
-    />
     <div class="movie-list-home">
       <MovieList
         v-for="movies in movieStore.moviesHomePage"
@@ -34,5 +30,6 @@ onMounted(() => {
   margin-bottom: 3.5rem;
   max-width: var(--max-width);
   margin-inline: auto;
+  padding-left: 4px;
 }
 </style>
