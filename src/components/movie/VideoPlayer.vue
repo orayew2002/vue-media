@@ -508,7 +508,6 @@ onMounted(() => {
   document.addEventListener('fullscreenchange', fullScreenChangeHandler)
   document.addEventListener('mouseup', documentMouseupHandler)
   document.addEventListener('mousemove', documentMouseMoveHandler)
-  // Event Listeners
   video_ref.value?.addEventListener('enterpictureinpicture', () =>
     toggleMiniPlayerMode(true),
   )

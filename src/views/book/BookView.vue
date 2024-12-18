@@ -27,7 +27,6 @@ const createObserver = () => {
   }
 }
 
-// Watch for the element reference and start observing once it’s available
 watch(loadTrigger, newVal => {
   if (newVal) createObserver()
 })
@@ -40,7 +39,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   if (observer) {
-    observer.disconnect() // Properly disconnect the observer on unmount
+    observer.disconnect()
     observer = null
   }
 })
