@@ -4,7 +4,7 @@ import Movie from '@/views/movie/MovieView.vue'
 import Book from '@/views/book/BookView.vue'
 import Login from '@/views/login/LoginView.vue'
 import MoviesByCategory from '@/views/movie/MoviesByCategory.vue'
-import Search from '@/views/search/SearchView.vue'
+import SearchView from '@/views/search/SearchView.vue'
 import SearchM from '@/views/search/SearchMovie.vue'
 import Music from '@/views/music/MusicView.vue'
 import MusicItemView from '@/views/music/MusicItemView.vue'
@@ -51,7 +51,7 @@ const router = createRouter({
     {
       path: '/search',
       name: 'search',
-      component: Search,
+      component: SearchView,
       children: [
         {
           path: 'movies/:search',

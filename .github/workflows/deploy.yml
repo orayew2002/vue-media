@@ -18,14 +18,14 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 22 # Adjust to match your project requirements
+          node-version: v22.3.0 # Adjust to match your project requirements
 
       # Step 3: Install dependencies and build using pnpm
       - name: Install dependencies and build
         run: |
-          npm install -g pnpm  # Ensure pnpm is installed
-          pnpm install         # Install dependencies
-          pnpm build           # Build your project
+          npm install -g pnpm
+          pnpm install        
+          pnpm build
 
       # Step 4: Archive the `dist` folder
       - name: Create artifact from dist
