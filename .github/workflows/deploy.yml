@@ -1,0 +1,54 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - main # Trigger when changes are pushed to the main branch
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16 # Adjust to match your project requirements
+
+      # Step 3: Install dependencies and build using pnpm
+      - name: Install dependencies and build
+        run: |
+          npm install -g pnpm  # Ensure pnpm is installed
+          pnpm install         # Install dependencies
+          pnpm build           # Build your project
+
+      # Step 4: Archive the `dist` folder
+      - name: Create artifact from dist
+        run: |
+          tar -czvf dist.tar.gz -C dist .
+
+      # Step 5: Create or update a GitHub release and upload the artifact
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: latest # Use a consistent tag like "latest" for releases
+          release_name: Latest Release
+          body: |
+            Automated release from the main branch.
+          draft: false
+          prerelease: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload release asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: dist.tar.gz
+          asset_name: dist.tar.gz
+          asset_content_type: application/gzip
