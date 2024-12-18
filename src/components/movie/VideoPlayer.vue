@@ -26,8 +26,6 @@
       @click="controlsHandler"
       @loadeddata="isVideoLoading = false"
       @loadedmetadata="onLoadMetadata"
-      playsinline="true"
-      controls="false"
       ref="video_ref"
     ></video>
     <div
@@ -327,7 +325,6 @@ const fullScreenChangeHandler = () => {
     isFullScreenMode.value = true
   } else {
     isFullScreenMode.value = false
-    showControlsFn()
   }
 }
 
@@ -454,33 +451,6 @@ const onTogglePlayPuse = () => {
     isPaused.value = false
   }
 }
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let hideControlsTimeout: any
-function showControlsFn() {
-  if (video_controls_container.value && pause_play_icons.value) {
-    video_controls_container.value.style.opacity = '1'
-    pause_play_icons.value.style.opacity = '1'
-    clearTimeout(hideControlsTimeout)
-
-    if (document.fullscreenElement && !video_ref.value?.paused) {
-      hideControlsTimeout = setTimeout(() => {
-        if (video_controls_container.value && pause_play_icons.value) {
-          video_controls_container.value.style.opacity = '0'
-          pause_play_icons.value.style.opacity = '0'
-        }
-      }, 3000)
-    }
-  }
-}
-
-function hideControls() {
-  if (!document.fullscreenElement) {
-    if (video_controls_container.value && pause_play_icons.value) {
-      video_controls_container.value.style.opacity = '0'
-      pause_play_icons.value.style.opacity = '0'
-    }
-  }
-}
 
 watch(
   () => props.id,
@@ -539,8 +509,6 @@ onMounted(() => {
   document.addEventListener('mouseup', documentMouseupHandler)
   document.addEventListener('mousemove', documentMouseMoveHandler)
   // Event Listeners
-  video_container_ref.value?.addEventListener('mousemove', showControlsFn)
-  video_container_ref.value?.addEventListener('mouseleave', hideControls)
   video_ref.value?.addEventListener('enterpictureinpicture', () =>
     toggleMiniPlayerMode(true),
   )

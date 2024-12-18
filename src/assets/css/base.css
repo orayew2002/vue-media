@@ -33,6 +33,21 @@
   font-family: 'Poppins', sans-serif;
 }
 
+*::webkit-media-controls-panel {
+  display: none !important;
+  -webkit-appearance: none;
+}
+
+*::webkit-media-controls-play-button {
+  display: none !important;
+  -webkit-appearance: none;
+}
+
+*::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  -webkit-appearance: none;
+}
+
 body {
   background: var(--slate-950);
   /* width: 100%;
