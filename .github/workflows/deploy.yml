@@ -43,8 +43,8 @@ jobs:
             Automated release from the main branch.
           draft: false
           prerelease: false
-          token: ${{ secrets.GITHUB_TOKEN }}
-
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
       - name: Upload release asset
         uses: actions/upload-release-asset@v1
         with:
