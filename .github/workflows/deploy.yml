@@ -52,3 +52,5 @@ jobs:
           asset_path: dist.tar.gz
           asset_name: dist.tar.gz
           asset_content_type: application/gzip
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
