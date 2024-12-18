@@ -18,7 +18,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16 # Adjust to match your project requirements
+          node-version: 22 # Adjust to match your project requirements
 
       # Step 3: Install dependencies and build using pnpm
       - name: Install dependencies and build
