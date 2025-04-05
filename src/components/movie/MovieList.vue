@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { TMovieHomePage } from '@/types/movie'
 import { RouterLink } from 'vue-router'
-import MovieItem from '@/components/movie/MovieItem.vue'
 import { useI18n } from 'vue-i18n'
 import type { TLang } from '@/types/common'
+import MovieItemHorizontal from './MovieItemHorizontal.vue'
 defineProps<{
   movies: TMovieHomePage
 }>()
@@ -27,7 +27,7 @@ const { locale } = useI18n()
       </div>
     </div>
     <div class="movie_list">
-      <MovieItem
+      <MovieItemHorizontal
         v-for="movie in movies.movies"
         :key="movie.id"
         :movie="movie"

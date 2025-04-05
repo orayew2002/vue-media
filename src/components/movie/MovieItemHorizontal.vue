@@ -58,10 +58,7 @@ const { isMobile } = useIsMobile()
 </template>
 <style scoped>
 .movie_item_container {
-  max-width: 33.3333%;
-  flex-basis: 33.3333%;
-  padding-right: 16px;
-  margin-bottom: 16px;
+  width: 140px;
   display: flex;
   flex-direction: column;
   height: fit-content;
@@ -70,11 +67,11 @@ const { isMobile } = useIsMobile()
   position: relative;
   flex-shrink: 0;
   scroll-behavior: smooth;
-  width: 100%;
+  width: 140px;
   transform: scale(1);
   transition: transform 0.3s ease-in-out;
   overflow: hidden;
-  height: 120px;
+  height: 140px;
 }
 
 .movie_item:hover {
@@ -83,7 +80,7 @@ const { isMobile } = useIsMobile()
 }
 
 .movie_title {
-  font-size: x-small;
+  font-size: small;
   text-transform: capitalize;
   color: var(--movie-title);
   display: block;
@@ -133,22 +130,17 @@ const { isMobile } = useIsMobile()
 
 @media (min-width: 768px) {
   .movie_item_container {
-    flex-basis: 25%;
-    max-width: 25%;
+    width: 200px;
   }
-
+  .movie_item {
+    width: 200px;
+    height: 250px;
+  }
   .movie_title {
     font-size: medium;
   }
   .movie_duration {
     font-size: small;
-  }
-}
-
-@media (min-width: 1024px) {
-  .movie_item_container {
-    max-width: 16.6667%;
-    flex-basis: 16.6667%;
   }
 }
 </style>

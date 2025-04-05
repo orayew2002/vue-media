@@ -89,15 +89,11 @@ onUnmounted(() => {
   padding-bottom: 1rem;
 }
 .movie_list {
-  width: 100%;
-  max-height: 100%;
   display: flex;
-  gap: 1rem;
-  /* padding: 10px; */
-  overflow-x: scroll;
-  overflow-y: hidden;
-  --webkit-overflow-scroll: none;
+  flex-wrap: wrap;
+  flex-grow: 1;
 }
+
 .movie_list::-webkit-scrollbar {
   display: none;
 }
@@ -116,6 +112,7 @@ h1 {
   color: white;
   text-align: center;
 }
+
 @media screen and (min-width: 1120px) and (max-width: 1553px) {
   h1 {
     font-size: 1.5rem;

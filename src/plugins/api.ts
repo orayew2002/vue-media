@@ -1,4 +1,4 @@
-import type { AxiosError, AxiosInstance } from 'axios'
+import type { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios'
 import baseAxios from 'axios'
 import router from '@/router'
 const baseURL = import.meta.env.VITE_API_URL?.toString()
@@ -9,7 +9,7 @@ export const getAxios = (): AxiosInstance => {
   })
   instance.interceptors.request.use(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (config: { headers: any; params?: any }) => {
+    (config: InternalAxiosRequestConfig) => {
       if (!config.headers.Authorization) {
         // TODO get token from store
         config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`
